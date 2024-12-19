@@ -8,4 +8,36 @@
     android:orientation="vertical"
     tools:context=".Selection_Screen">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/drone_control"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Drone Control"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:onClick="Go_To_DroneControl"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/drone_routes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Tracks"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:onClick="Go_To_DroneTracks_Selection"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>

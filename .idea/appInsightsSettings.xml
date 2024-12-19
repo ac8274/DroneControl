@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.dronecontrol" />
-                  <option name="mobileSdkAppId" value="1:828186420526:android:f0742ea36d20f6d29f86bf" />
-                  <option name="projectId" value="drone-control-ca7d6" />
-                  <option name="projectNumber" value="828186420526" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
