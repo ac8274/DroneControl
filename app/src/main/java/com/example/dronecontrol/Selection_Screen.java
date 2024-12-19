@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.lang.reflect.Method;
 
 
 public class Selection_Screen extends AppCompatActivity {
@@ -29,8 +32,20 @@ public class Selection_Screen extends AppCompatActivity {
      */
     public boolean checkHotSpot()
     {
-        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).
+        try {
+            // Get the WifiManager instance
+            WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (wifiManager == null) return false;
+
+            // Use reflection to call the isWifiApEnabled method
+            Method method = wifiManager.getClass().getDeclaredMethod("isWifiApEnabled");
+            method.setAccessible(true);
+            return (boolean) method.invoke(wifiManager);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void createHotSpotAlert()
