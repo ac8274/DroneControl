@@ -3,6 +3,7 @@ package com.example.dronecontrol;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ public class Selection_Screen extends AppCompatActivity {
         setContentView(R.layout.activity_selection_screen);
         drone_control = findViewById(R.id.drone_control);
         drone_routes = findViewById(R.id.drone_routes);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // locks the screen in the horizontol state.
     }
 
     /*
@@ -54,18 +57,17 @@ public class Selection_Screen extends AppCompatActivity {
         adb.setCancelable(false);
         adb.setTitle("Requirements");
         adb.setMessage("Please Turn on HotSpot Before Continuing!");
-        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(checkHotSpot())
-                {
-                    dialog.cancel();
-                }
-            }
-        });
+        adb.setPositiveButton("OK",null);  // override the defualt behaviour of the positive button that it will not exist.
 
         AlertDialog wifiHotspotAlert = adb.create();
         wifiHotspotAlert.show();
+
+        wifiHotspotAlert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {  // set new behaviour for the positive button
+            if(checkHotSpot())
+            {
+                wifiHotspotAlert.dismiss();
+            }
+        });
     }
 
     public void Go_To_DroneControl(View view) {
@@ -73,8 +75,10 @@ public class Selection_Screen extends AppCompatActivity {
         {
             createHotSpotAlert();
         }
-        Intent nextActivity = new Intent(this,Drone_Control.class);
-        startActivity(nextActivity);
+        else {
+            Intent nextActivity = new Intent(this,Drone_Control.class);
+            startActivity(nextActivity);
+        }
     }
 
     public void Go_To_DroneTracks_Selection(View view) {

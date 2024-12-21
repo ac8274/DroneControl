@@ -1,5 +1,7 @@
 package com.example.dronecontrol;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import com.example.dronecontrol.Structures.UserUid;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         emailInputEditText = findViewById(R.id.emailInputEditText);
         editTextPassword = findViewById(R.id.editTextPassword);
         auth = FirebaseAuth.getInstance();
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // locks the screen in the horizontol state.
     }
 
     public void Sign_In(View view) {
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(MainActivity.this, "Success",Toast.LENGTH_SHORT).show();
                             UserUid.user_uid = auth.getCurrentUser().getUid();
-                            // add intent to next activity.
+                            StartNextActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             task.getException().printStackTrace();
@@ -73,12 +77,18 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
                             UserUid.user_uid = auth.getCurrentUser().getUid();
-                            // add intent to next activity.
+                            StartNextActivity();
                         } else {
                             task.getException().printStackTrace();
                             Toast.makeText(MainActivity.this, "Failure", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    public void StartNextActivity()
+    {
+        Intent nextActivity = new Intent(this,Selection_Screen.class);
+        startActivity(nextActivity);
     }
 }
