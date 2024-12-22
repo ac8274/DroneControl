@@ -2,6 +2,5 @@
 <resources>
     <declare-styleable name="Joystick">
         <attr name="circle_color" format="color"/>
-        <attr name="circle_radius" format="dimension" />
     </declare-styleable>
 </resources>

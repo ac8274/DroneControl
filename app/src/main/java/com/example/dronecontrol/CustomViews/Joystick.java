@@ -19,7 +19,10 @@ public class Joystick extends View {
     private float[] mCirceleX;
     private float[] mCirceleY;
     private Paint mPaintCircle;
-    private int mCircleRadius;
+    private int mRadius;
+    private double containment_height;
+    private double containment_width;
+
 
     public Joystick(Context context)
     {
@@ -49,8 +52,9 @@ public class Joystick extends View {
         mCirceleY =new float[2];
         mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintCircle.setColor(Color.parseColor("#FF0000"));
-        this.mCircleRadius = 100;
-
+        mRadius = 100;
+        containment_height = 0.0;
+        containment_width = 0.0;
         if(set == null)
         {
             return;
@@ -58,7 +62,6 @@ public class Joystick extends View {
 
         TypedArray ta = getContext().obtainStyledAttributes(set, R.styleable.Joystick);
 
-        this.mCircleRadius = ta.getDimensionPixelSize(R.styleable.Joystick_circle_radius,100);
         mPaintCircle.setColor(ta.getColor(R.styleable.Joystick_circle_color,Color.parseColor("#FF0000")));
 
         ta.recycle();
@@ -67,14 +70,16 @@ public class Joystick extends View {
     @Override
     protected void onDraw(@NonNull Canvas canvas)
     {
+        mRadius = (int) (getHeight()/3);
         if(0f == mCirceleX[0] && 0f == mCirceleY[0]) {
             mCirceleX[0] = getWidth() / 2;
             mCirceleY[0] = getHeight() / 2;
         }
         mCirceleX[1] = 0;
         mCirceleY[1] = 0;
-        canvas.drawCircle(mCirceleX[0],mCirceleY[0],mCircleRadius,mPaintCircle);
-
+        canvas.drawCircle(mCirceleX[0],mCirceleY[0],mRadius,mPaintCircle);
+        containment_height = getHeight();
+        containment_width = getWidth();
     }
 
     public float getXDistance()
@@ -100,12 +105,14 @@ public class Joystick extends View {
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                if(Math.pow(event.getX() - mCirceleX[0],2) + Math.pow(event.getY() - mCirceleY[0],2) < Math.pow(mCircleRadius,2)) //check if the touched part is inside my joystickCenter
+                if(Math.pow(event.getX() - mCirceleX[0],2) + Math.pow(event.getY() - mCirceleY[0],2) < Math.pow(mRadius,2)) //check if the touched part is inside my joystickCenter
                 {
+                    if((event.getY() + mRadius) <= (int) containment_height || (event.getX() + mRadius) <= (int) containment_width)
+                    {
                     mCirceleY[0] = event.getY(); // set new position X of joystickCenter
                     mCirceleX[0] = event.getX(); // set new position X of joystickCenter
-
-                    postInvalidate(); // update the UI of changes
+                    postInvalidate();
+                    } // update the UI of changes
                     return true;
                 }
                 return value;
