@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "828186420526",
+    "project_id": "drone-control-ca7d6",
+    "storage_bucket": "drone-control-ca7d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828186420526:android:f0742ea36d20f6d29f86bf",
+        "android_client_info": {
+          "package_name": "com.example.dronecontrol"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfwPJt6FQWZlxrRsBKjFutUSK_uLSBMgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828186420526:android:2ed708d4642add0d9f86bf",
+        "android_client_info": {
+          "package_name": "com.example.poc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfwPJt6FQWZlxrRsBKjFutUSK_uLSBMgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
