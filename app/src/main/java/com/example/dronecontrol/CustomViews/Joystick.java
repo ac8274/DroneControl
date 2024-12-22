@@ -1,6 +1,7 @@
 package com.example.dronecontrol.CustomViews;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,11 +12,14 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.dronecontrol.R;
+
 public class Joystick extends View {
+
     private float[] mCirceleX;
     private float[] mCirceleY;
     private Paint mPaintCircle;
-    private static final float mCircleRadius = 100;
+    private int mCircleRadius;
 
     public Joystick(Context context)
     {
@@ -45,6 +49,19 @@ public class Joystick extends View {
         mCirceleY =new float[2];
         mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintCircle.setColor(Color.parseColor("#FF0000"));
+        this.mCircleRadius = 100;
+
+        if(set == null)
+        {
+            return;
+        }
+
+        TypedArray ta = getContext().obtainStyledAttributes(set, R.styleable.Joystick);
+
+        this.mCircleRadius = ta.getDimensionPixelSize(R.styleable.Joystick_circle_radius,100);
+        mPaintCircle.setColor(ta.getColor(R.styleable.Joystick_circle_color,Color.parseColor("#FF0000")));
+
+        ta.recycle();
     }
 
     @Override
