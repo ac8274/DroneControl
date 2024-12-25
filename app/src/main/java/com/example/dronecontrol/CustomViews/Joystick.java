@@ -84,12 +84,12 @@ public class Joystick extends View {
 
     public float getXDistance()
     {
-        return Math.abs(mCirceleY - (float) containment_height/2);
+        return mCirceleX - (float)containment_width/2;
     }
 
     public float getYDistance()
     {
-        return Math.abs(mCirceleX - (float)containment_width/2);
+        return mCirceleY - (float) containment_height/2;
     }
 
     @Override

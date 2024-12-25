@@ -14,9 +14,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 
 public class Drone_Control extends AppCompatActivity implements OnMapReadyCallback {
-    private Joystick rightJoystick;
-    private Joystick leftJoystick;
-    private GoogleMap mMap;
+    private static Joystick rightJoystick;
+    private static Joystick leftJoystick;
+    private static GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,12 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
+
+    public static void setPosition(double latatiude, double longtatiude)
+    {
+        //mMap.
+    }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
