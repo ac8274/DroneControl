@@ -103,20 +103,16 @@ public class Joystick extends View {
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                if(Math.pow(event.getX() - mCirceleX,2) + Math.pow(event.getY() - mCirceleY,2) < Math.pow(mRadius,2)) //check if the touched part is inside my joystickCenter
+                Log.println(Log.DEBUG,"Position", "circle X:"+ String.valueOf(event.getX()) + "\n circle Y" + String.valueOf(event.getY()));
+                if((event.getY() <= (int) containment_height) && (event.getY() >=0) && (event.getX() <= (int) containment_width) && (event.getX() >=0))
                 {
-                    Log.println(Log.DEBUG,"Position", "circle X:"+ String.valueOf(event.getX()) + "\n circle Y" + String.valueOf(event.getY()));
-                    if((event.getY() <= (int) containment_height) && (event.getY() >=0) && (event.getX() <= (int) containment_width) && (event.getX() >=0))
-                    {
                     mCirceleY = event.getY(); // set new position X of joystickCenter
                     mCirceleX = event.getX(); // set new position X of joystickCenter
                     postInvalidate();
-                    } // update the UI of changes
-                    return true;
-                }
+                } // update the UI of changes
                 return value;
 
-            case MotionEvent.ACTION_BUTTON_RELEASE:
+            case MotionEvent.ACTION_UP:
                 mCirceleY = (float)containment_height/2;
                 mCirceleX = (float)containment_width/2;
                 postInvalidate();
