@@ -1,6 +1,7 @@
 package com.example.dronecontrol;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    private SharedPreferences sharedPreferences;
     private FirebaseAuth auth;
     private Button SignIn_button;
     private Button SignUp_button;
@@ -47,8 +49,23 @@ public class MainActivity extends AppCompatActivity {
         emailInputEditText = findViewById(R.id.emailInputEditText);
         editTextPassword = findViewById(R.id.editTextPassword);
         auth = FirebaseAuth.getInstance();
-
+        sharedPreferences = getSharedPreferences("signIn", MODE_PRIVATE);
+        if(sharedPreferences.contains("Email"))
+        {
+            emailInputEditText.setText(sharedPreferences.getString("Email",""));
+            editTextPassword.setText(sharedPreferences.getString("Password",""));
+        }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // locks the screen in the horizontol state.
+    }
+
+    public void changeSavedCredentials()
+    {
+        SharedPreferences.Editor ed = sharedPreferences.edit();
+
+        ed.putString("Email",emailInputEditText.getText().toString());
+        ed.putString("Password",editTextPassword.getText().toString());
+
+        ed.commit();
     }
 
     public void Sign_In(View view) {
@@ -57,9 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Success",Toast.LENGTH_SHORT).show();
-                            UserUid.user_uid = auth.getCurrentUser().getUid();
-                            StartNextActivity();
+                            onSuccess();
                         } else {
                             // If sign in fails, display a message to the user.
                             task.getException().printStackTrace();
@@ -75,15 +90,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                            UserUid.user_uid = auth.getCurrentUser().getUid();
-                            StartNextActivity();
+                            onSuccess();
                         } else {
                             task.getException().printStackTrace();
                             Toast.makeText(MainActivity.this, "Failure", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    public void onSuccess()
+    {
+        UserUid.user_uid = auth.getCurrentUser().getUid();
+        changeSavedCredentials();
+        StartNextActivity();
     }
 
     public void StartNextActivity()
