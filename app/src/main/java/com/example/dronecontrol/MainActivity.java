@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // locks the screen in the horizontol state.
     }
-//test
+
     public void changeSavedCredentials()
     {
         SharedPreferences.Editor ed = sharedPreferences.edit();
