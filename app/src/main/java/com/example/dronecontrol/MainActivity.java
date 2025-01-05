@@ -98,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-//added
-    //cg
+
     public void onSuccess()
     {
         UserUid.user_uid = auth.getCurrentUser().getUid();
