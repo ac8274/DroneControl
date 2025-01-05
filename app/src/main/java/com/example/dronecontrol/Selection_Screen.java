@@ -66,6 +66,7 @@ public class Selection_Screen extends AppCompatActivity {
             if(checkHotSpot())
             {
                 wifiHotspotAlert.dismiss();
+                startNextActivity(Drone_Control.class);
             }
         });
     }
@@ -75,10 +76,16 @@ public class Selection_Screen extends AppCompatActivity {
         {
             createHotSpotAlert();
         }
-        else {
-            Intent nextActivity = new Intent(this,Drone_Control.class);
-            startActivity(nextActivity);
+        else
+        {
+            startNextActivity(Drone_Control.class);
         }
+    }
+
+    public void startNextActivity(Class <?> cls)
+    {
+        Intent nextActivity = new Intent(this,cls);
+        startActivity(nextActivity);
     }
 
     public void Go_To_DroneTracks_Selection(View view) {
