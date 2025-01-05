@@ -35,8 +35,8 @@ public class GPXparser {
         //First part of XML FILE most important for setting up which kind of file this is.
 
         this.serializer.startTag(null,"metadata");
-        this.serializer.startTag(null,"name").text("POC test").endTag(null,"name");
-        this.serializer.startTag(null,"desc").text("Proof of concept GPX file").endTag(null,"desc");
+        this.serializer.startTag(null,"name").text("Drone Track").endTag(null,"name");
+        this.serializer.startTag(null,"desc").text("Drone track GPX file").endTag(null,"desc");
         this.serializer.startTag(null,"author");
         this.serializer.startTag(null,"name").text("Arie Chernobilsky").endTag(null,"name");
         this.serializer.endTag(null,"author");
