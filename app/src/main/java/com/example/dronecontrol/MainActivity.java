@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -78,7 +79,11 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             task.getException().printStackTrace();
-                            Toast.makeText(MainActivity.this, "Failure",Toast.LENGTH_SHORT).show();
+                            AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+                            adb.setTitle("Failed to SignIn");
+                            adb.setMessage("Your email or password are wrong. please recheck them and retry again later.");
+                            AlertDialog failureAlert = adb.create();
+                            failureAlert.show();
                         }
                     }
                 });
@@ -93,7 +98,11 @@ public class MainActivity extends AppCompatActivity {
                             onSuccess();
                         } else {
                             task.getException().printStackTrace();
-                            Toast.makeText(MainActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                            AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+                            adb.setTitle("Failed to SignUp");
+                            adb.setMessage("your email or password do not match the requirements. please recheck them and retry after");
+                            AlertDialog failureAlert = adb.create();
+                            failureAlert.show();
                         }
                     }
                 });
