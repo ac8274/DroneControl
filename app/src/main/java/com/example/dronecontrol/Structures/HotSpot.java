@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class HotSpot extends Thread{
@@ -86,6 +87,13 @@ public class HotSpot extends Thread{
             throw new RuntimeException(e);
         }
     }
+
+    private void parsePacket(byte[] message,int index)
+    {
+
+    }
+
+
 
     private void writeToClient(OutputStream out, byte[] message)
     {

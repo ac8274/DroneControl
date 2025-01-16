@@ -44,12 +44,12 @@ public class GPXparser {
         //Second part finished, This part is of the Author writes.
     }
 
-    public void addPoint(Location location,String name) throws IOException {
+    public void addPoint(double latatiude, double longtatiude, double elevation,String name) throws IOException {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         this.serializer.startTag(null,"wpt");
-        this.serializer.attribute(null,"lat",String.valueOf(location.getLatitude()));
-        this.serializer.attribute(null,"lon",String.valueOf(location.getLongitude()));
-        this.serializer.startTag(null,"ele").text(String.valueOf(location.getAltitude())).endTag(null,"ele");
+        this.serializer.attribute(null,"lat",String.valueOf(latatiude));
+        this.serializer.attribute(null,"lon",String.valueOf(longtatiude));
+        this.serializer.startTag(null,"ele").text(String.valueOf(elevation)).endTag(null,"ele");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {this.serializer.startTag(null,"time").text(Calendar.getInstance().getTime().toInstant().toString()).endTag(null,"time");}
         else {this.serializer.startTag(null,"time").text(df.format(Calendar.getInstance().getTime())).endTag(null,"time");}
         this.serializer.startTag(null,"name").text(name).endTag(null,"name");
