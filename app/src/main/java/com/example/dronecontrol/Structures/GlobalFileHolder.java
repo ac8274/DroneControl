@@ -16,6 +16,7 @@ public class GlobalFileHolder {
 
     private GlobalFileHolder()
     {
+        stopWriting = false;
         this.os = null;
     }
 
@@ -30,15 +31,14 @@ public class GlobalFileHolder {
         }
     }
 
-    public void writeToFile(double latatiude, double longtatiude, double elevation)
+    public void writeToFile(double latitude, double longitude, double elevation)
     {
         try {
-            this.gpXparser.addPoint(latatiude,longtatiude,elevation,"trackPoint");
+            this.gpXparser.addPoint(latitude,longitude,elevation,"trackPoint");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     public static GlobalFileHolder getInstance()
     {
