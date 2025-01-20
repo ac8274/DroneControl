@@ -3,6 +3,8 @@ package com.example.dronecontrol.Structures;
 import android.util.Log;
 
 
+import com.example.dronecontrol.Drone_Control;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,12 +19,14 @@ public class HotSpot extends Thread{
     private String HOTSPOT_IP; // Default IP for hotspot gateway
     private int PORT; // Port to listen on
     private static final String TAG = "ServerThread";
+    private GlobalFileHolder fileHolder;
     //private Context context;
 
     public HotSpot(String ip, int port)//, Context context
     {
         this.HOTSPOT_IP = ip;
         this.PORT = port;
+        this.fileHolder = GlobalFileHolder.getInstance();
         //this.context = context;
     }
 
@@ -75,9 +79,9 @@ public class HotSpot extends Thread{
             while(true) {
                 byte[] buffer = new byte[4096];
                 int bytesRead = inputStream.read(buffer);
-                String receivedData = new String(buffer, 0, bytesRead, StandardCharsets.US_ASCII);
-
-                Log.println(Log.INFO, "SocketServer", "Received: " + receivedData);
+                //String receivedData = new String(buffer, 0, bytesRead, StandardCharsets.US_ASCII);
+                parsePacket(buffer);
+                //Log.println(Log.INFO, "SocketServer", "Received: " + receivedData);
                 byte[] sendMessage = "REPLACE WITH REAL TEXT".getBytes(StandardCharsets.US_ASCII);
                 writeToClient(outputStream, sendMessage);
             }
@@ -88,12 +92,28 @@ public class HotSpot extends Thread{
         }
     }
 
-    private void parsePacket(byte[] message,int index)
+    private void parsePacket(byte[] message)
     {
+        double elevation = packetParser.getElevation(message);
+        double latitude = packetParser.getLatatiude(message);
+        double longitude = packetParser.getLongtatiude(message);
 
+        this.fileHolder.writeToFile(latitude, longitude, elevation);
+        Drone_Control.setPosition(latitude,longitude);
     }
 
+    private byte[] createResponse()
+    {
+        byte[] message = new byte[24];
 
+        double latitude = Drone_Control.getLatitude();
+        double longitude = Drone_Control.getLongitude();
+        double elevation = Drone_Control.getElevation();
+
+
+
+        return message;
+    }
 
     private void writeToClient(OutputStream out, byte[] message)
     {

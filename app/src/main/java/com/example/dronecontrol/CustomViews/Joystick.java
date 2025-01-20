@@ -82,10 +82,7 @@ public class Joystick extends View {
         containment_width = getWidth();
     }
 
-    public float getXDistance()
-    {
-        return mCirceleX - (float)containment_width/2;
-    }
+    public float getXDistance() {return mCirceleX - (float)containment_width/2;}
 
     public float getYDistance()
     {

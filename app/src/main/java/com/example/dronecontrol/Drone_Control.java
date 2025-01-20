@@ -1,6 +1,5 @@
 package com.example.dronecontrol;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -81,6 +80,12 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(dronePos));
     }
+
+    public static double getLongitude() { return rightJoystick.getYDistance();}
+
+    public static double getLatitude() {return rightJoystick.getXDistance();}
+
+    public static double getElevation() {return leftJoystick.getYDistance();}
 
     @Override
     public void onBackPressed() {
