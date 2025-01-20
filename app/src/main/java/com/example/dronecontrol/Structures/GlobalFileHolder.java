@@ -40,6 +40,8 @@ public class GlobalFileHolder {
         }
     }
 
+    public void endFileWriting() throws IOException {this.gpXparser.endWriting();}
+
     public static GlobalFileHolder getInstance()
     {
         if(null == instance)

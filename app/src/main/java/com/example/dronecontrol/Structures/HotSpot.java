@@ -76,15 +76,17 @@ public class HotSpot extends Thread{
         try {
             inputStream = clientSocket.getInputStream();
             outputStream = clientSocket.getOutputStream();
-            while(true) {
+            while(!fileHolder.stopWriting) {
                 byte[] buffer = new byte[4096];
                 int bytesRead = inputStream.read(buffer);
-                //String receivedData = new String(buffer, 0, bytesRead, StandardCharsets.US_ASCII);
-                parsePacket(buffer);
-                //Log.println(Log.INFO, "SocketServer", "Received: " + receivedData);
-                byte[] sendMessage = "REPLACE WITH REAL TEXT".getBytes(StandardCharsets.US_ASCII);
-                writeToClient(outputStream, sendMessage);
+
+                if(!fileHolder.stopWriting)
+                {
+                    parsePacket(buffer);
+                    writeToClient(outputStream, this.createResponse());
+                }
             }
+            fileHolder.endFileWriting();
 
         } catch (IOException e) {
             Log.println(Log.INFO,"Reader","Reader failed to read from buffer");
@@ -110,7 +112,9 @@ public class HotSpot extends Thread{
         double longitude = Drone_Control.getLongitude();
         double elevation = Drone_Control.getElevation();
 
-
+       ByteBuffer.wrap(message).putDouble(latitude);
+       ByteBuffer.wrap(message).putDouble(8,longitude);
+       ByteBuffer.wrap(message).putDouble(16,elevation);
 
         return message;
     }

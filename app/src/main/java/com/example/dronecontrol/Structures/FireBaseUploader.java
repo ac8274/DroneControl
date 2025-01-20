@@ -1,4 +1,4 @@
-package com.example.poc.Structures;
+package com.example.dronecontrol.Structures;
 
 import android.content.Context;
 import android.net.Uri;
@@ -19,27 +19,15 @@ public final class FireBaseUploader {
     private FireBaseUploader()
     {
     }
-    public static void uploadFile(File file, String userUID,String fileType, Context context)
+    public static void uploadFile(File file, String userUID,String fileType,OnFailureListener failureListener, OnSuccessListener successListener)
     {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference ref = storage.getReference().child("userFiles/"+userUID+"/"+fileType+"Files/"+file.getName());
+        StorageReference ref = storage.getReference().child("userFiles/"+
+                userUID+"/"+fileType+"Files/"+file.getName());
         Uri fileUri = Uri.fromFile(file);
         UploadTask uploadTask = ref.putFile(fileUri);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.println(Log.INFO,"dataUploadFailure",exception.getMessage());
-                Toast.makeText(context, "failure" ,Toast.LENGTH_SHORT).show();
-                deleteFile(file);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
-                deleteFile(file);
-            }
-        });
+        uploadTask.addOnFailureListener(failureListener).addOnSuccessListener(successListener);
     }
 
     public static void deleteFile(File file)

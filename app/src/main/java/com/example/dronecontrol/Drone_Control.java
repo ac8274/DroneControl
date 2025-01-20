@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.example.dronecontrol.Structures.FireBaseUploader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,7 +40,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
     private String fileName;
     private File file;
     private GlobalFileHolder fileHolder;
-    private AlertDialog FirebaseUpload;
+    private AlertDialog firebaseUpload;
     private static Marker droneMarker; // Marker for the drone
 
 
@@ -115,13 +116,13 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         writeAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {  // set new behaviour for the positive button
             if(this.fileHolder.stopWriting == false)
             {
-                fireBaseUpload();
+                FireBaseUploadDialog();
                 writeAlertDialog.dismiss();
             }
         });
     }
 
-    public void fireBaseUpload()
+    public void FireBaseUploadDialog()
     {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setCancelable(false);
@@ -129,32 +130,22 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         adb.setMessage("Saving Track ...");
         adb.setPositiveButton("OK",null);  // override the defualt behaviour of the positive button that it will not exist.
 
-        FirebaseUpload = adb.create();
-        FirebaseUpload.show();
-        FirebaseUploadfunc();
-    }
-
-    public void FirebaseUploadfunc()
-    {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference ref = storage.getReference().child("userFiles/"+ UserUid.user_uid +"/gpx/Files/"+file.getName());
-        Uri fileUri = Uri.fromFile(file);
-        UploadTask uploadTask = ref.putFile(fileUri);
-
-        uploadTask.addOnFailureListener(new OnFailureListener() {
+        firebaseUpload = adb.create();
+        firebaseUpload.show();
+        FireBaseUploader.uploadFile(this.file,UserUid.user_uid,".gpx",
+                new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                FirebaseUpload.dismiss();
+                firebaseUpload.dismiss();
                 Log.println(Log.INFO,"dataUploadFailure",exception.getMessage());
                 Toast.makeText(Drone_Control.this, "failure" ,Toast.LENGTH_SHORT).show();
-                com.example.poc.Structures.FireBaseUploader.deleteFile(file);
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        }, new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                FirebaseUpload.dismiss();
+                firebaseUpload.dismiss();
                 Toast.makeText(Drone_Control.this, "Success", Toast.LENGTH_SHORT).show();
-                com.example.poc.Structures.FireBaseUploader.deleteFile(file);
+                FireBaseUploader.deleteFile(file);
             }
         });
     }
