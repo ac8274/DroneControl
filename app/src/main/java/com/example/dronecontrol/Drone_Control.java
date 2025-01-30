@@ -82,11 +82,32 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         mMap.animateCamera(CameraUpdateFactory.newLatLng(dronePos));
     }
 
-    public static double getLongitude() { return rightJoystick.getYDistance();}
+    public static double getLongitude() {
+        double distance = rightJoystick.getYDistance();
+        while(distance > 10 || distance < -10)
+        {
+            distance = distance/10.0;
+        }
+        return distance;
+    }
 
-    public static double getLatitude() {return rightJoystick.getXDistance();}
+    public static double getLatitude() {
+        double distance = rightJoystick.getXDistance();
+        while(distance > 10 || distance < -10)
+        {
+            distance = distance/10.0;
+        }
+        return distance;
+    }
 
-    public static double getElevation() {return leftJoystick.getYDistance();}
+    public static double getElevation() {
+        double distance = leftJoystick.getYDistance();
+        while(distance > 10 || distance < -10)
+        {
+            distance = distance/10.0;
+        }
+        return distance;
+    }
 
     @Override
     public void onBackPressed() {

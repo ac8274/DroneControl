@@ -108,9 +108,9 @@ public class HotSpot extends Thread{
     {
         byte[] message = new byte[24];
 
-        double latitude = Drone_Control.getLatitude();
-        double longitude = Drone_Control.getLongitude();
-        double elevation = Drone_Control.getElevation();
+        double latitude = Drone_Control.getLatitude() / 10000.0;
+        double longitude = Drone_Control.getLongitude() / 10000.0;
+        double elevation = Drone_Control.getElevation() / 10000.0;
 
        ByteBuffer.wrap(message).putDouble(latitude);
        ByteBuffer.wrap(message).putDouble(8,longitude);
