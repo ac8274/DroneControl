@@ -133,13 +133,12 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         adb.setMessage("Saving Track ...");
         adb.setPositiveButton("OK",null);  // override the defualt behaviour of the positive button that it will not exist.
 
-        AlertDialog writeAlertDialog = adb.create();
-        writeAlertDialog.show();
+        firebaseUpload = adb.create();
+        firebaseUpload.show();
 
-        writeAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {  // set new behaviour for the positive button
+        firebaseUpload.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {  // set new behaviour for the positive button
             if(GlobalFileHolder.stopWriting == false)
             {
-                writeAlertDialog.dismiss();
                 FireBaseUploadDialog();
             }
         });
@@ -147,14 +146,9 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
     public void FireBaseUploadDialog()
     {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setCancelable(false);
-        adb.setTitle("Requirements");
-        adb.setMessage("Saving Track ...");
-        adb.setPositiveButton("OK",null);  // override the defualt behaviour of the positive button that it will not exist.
+        firebaseUpload.setTitle("Requirements");
+        firebaseUpload.setMessage("Saving Track ...");
 
-        firebaseUpload = adb.create();
-        firebaseUpload.show();
         FireBaseUploader.uploadFile(this.file,UserUid.user_uid,".gpx",
                 new OnFailureListener() {
             @Override
@@ -171,11 +165,11 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
                 FireBaseUploader.deleteFile(file);
             }
         });
+        firebaseUpload.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(null);
     }
 
     @Override
     protected void onDestroy() {
-        GlobalFileHolder.stopWriting = true;
         try {
             GlobalFileHolder.getInstance().closeStream();
         } catch (IOException e) {

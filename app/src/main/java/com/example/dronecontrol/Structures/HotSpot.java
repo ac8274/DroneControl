@@ -59,6 +59,7 @@ public class HotSpot extends Thread{
             System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
             handleClient(clientSocket);
             clientSocket.close();
+            GlobalFileHolder.stopWriting = false;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +88,6 @@ public class HotSpot extends Thread{
                 }
             }
             fileHolder.endFileWriting();
-
         } catch (IOException e) {
             Log.println(Log.INFO,"Reader","Reader failed to read from buffer");
             throw new RuntimeException(e);

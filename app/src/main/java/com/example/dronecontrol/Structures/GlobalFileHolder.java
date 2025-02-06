@@ -40,12 +40,16 @@ public class GlobalFileHolder {
         }
     }
 
-    public void endFileWriting() throws IOException {this.gpXparser.endWriting();}
+    public void endFileWriting() throws IOException
+    {
+        this.gpXparser.endWriting();
+        this.os.flush();
+    }
 
-    public void closeStream() throws IOException {
-        if(stopWriting)
+    public void closeStream() throws IOException
+    {
+        if(!stopWriting)
         {
-            this.os.flush();
             this.os.close();
             this.os = null;
         }
