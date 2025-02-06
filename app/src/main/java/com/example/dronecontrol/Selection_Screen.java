@@ -97,9 +97,10 @@ public class Selection_Screen extends AppCompatActivity {
         fileNameAD.show();
 
         fileNameAD.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
-            if(fileNameET.getText().toString().isEmpty())
+            if(!fileNameET.getText().toString().isEmpty())
             {
                 startNextActivity(Drone_Control.class,fileNameET.getText().toString());
+                fileNameAD.dismiss();
             }
         });
     }

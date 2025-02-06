@@ -31,6 +31,7 @@ import com.example.dronecontrol.Structures.FireBaseUploader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class Drone_Control extends AppCompatActivity implements OnMapReadyCallback {
@@ -52,14 +53,14 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         leftJoystick = findViewById(R.id.leftJoystick);
         fileName = getIntent().getStringExtra("Track Name");
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        Log.println(Log.INFO,"app activation","activation");
         file = new File(this.getExternalFilesDir(null),fileName +".gpx");
         try {
             fileHolder = GlobalFileHolder.getInstance();
@@ -69,6 +70,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         } catch (StreamInUseException e) {
             throw new RuntimeException(e);
         }
+        Log.println(Log.INFO,"making the activity","for now everything is fine");
     }
 
     public static void setPosition(double latitude, double longitude)
@@ -135,10 +137,10 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         writeAlertDialog.show();
 
         writeAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {  // set new behaviour for the positive button
-            if(this.fileHolder.stopWriting == false)
+            if(GlobalFileHolder.stopWriting == false)
             {
-                FireBaseUploadDialog();
                 writeAlertDialog.dismiss();
+                FireBaseUploadDialog();
             }
         });
     }
@@ -172,7 +174,19 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
+    protected void onDestroy() {
+        GlobalFileHolder.stopWriting = true;
+        try {
+            GlobalFileHolder.getInstance().closeStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        Log.println(Log.DEBUG,"map ready","Map is ready");
         mMap = googleMap;
 
         // Initial location
@@ -181,7 +195,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dronePos, 10));
 
-        HotSpot hotSpot = new HotSpot("0.0.0.0",3245);
+        HotSpot hotSpot = new HotSpot("0.0.0.0",4454);
         hotSpot.start();
     }
 }

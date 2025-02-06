@@ -42,6 +42,15 @@ public class GlobalFileHolder {
 
     public void endFileWriting() throws IOException {this.gpXparser.endWriting();}
 
+    public void closeStream() throws IOException {
+        if(stopWriting)
+        {
+            this.os.flush();
+            this.os.close();
+            this.os = null;
+        }
+    }
+
     public static GlobalFileHolder getInstance()
     {
         if(null == instance)
