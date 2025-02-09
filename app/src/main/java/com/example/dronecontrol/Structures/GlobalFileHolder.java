@@ -35,6 +35,7 @@ public class GlobalFileHolder {
     {
         try {
             this.gpXparser.addPoint(latitude,longitude,elevation,"trackPoint");
+            this.os.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

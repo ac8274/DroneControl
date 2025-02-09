@@ -66,7 +66,8 @@ public class Selection_Screen extends AppCompatActivity {
         wifiHotspotAlert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {  // set new behaviour for the positive button
             if(checkHotSpot())
             {
-                wifiHotspotAlert.dismiss();
+                wifiHotspotAlert.cancel();
+                getFileName();
             }
         });
     }
@@ -99,8 +100,8 @@ public class Selection_Screen extends AppCompatActivity {
         fileNameAD.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
             if(!fileNameET.getText().toString().isEmpty())
             {
+                fileNameAD.cancel();
                 startNextActivity(Drone_Control.class,fileNameET.getText().toString());
-                fileNameAD.dismiss();
             }
         });
     }

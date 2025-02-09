@@ -1,10 +1,12 @@
 package com.example.dronecontrol.Structures;
 
+import android.app.Activity;
 import android.util.Log;
 
 
 import com.example.dronecontrol.Drone_Control;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,15 +18,15 @@ import java.nio.charset.StandardCharsets;
 
 public class HotSpot extends Thread{
     private ServerSocket serverSocket;
-    private String HOTSPOT_IP; // Default IP for hotspot gateway
+    private Activity fatherActivity;
     private int PORT; // Port to listen on
     private static final String TAG = "ServerThread";
     private GlobalFileHolder fileHolder;
     //private Context context;
 
-    public HotSpot(String ip, int port)//, Context context
+    public HotSpot(int port,Activity activity)//, Context context
     {
-        this.HOTSPOT_IP = ip;
+        this.fatherActivity = activity;
         this.PORT = port;
         this.fileHolder = GlobalFileHolder.getInstance();
         //this.context = context;
@@ -49,15 +51,16 @@ public class HotSpot extends Thread{
     public void startServer() {
         try {
             // Bind to the Hotspot IP and a specific port
-            InetAddress inetAddress = InetAddress.getByName(HOTSPOT_IP);
-            serverSocket = new ServerSocket(PORT, 50, inetAddress);
-            System.out.println("Server started on " + HOTSPOT_IP + ":" + PORT);
+            serverSocket = new ServerSocket(PORT);
+            System.out.println("Server started" + ":" + PORT);
 
             // Listen for incoming connections
             Socket clientSocket = serverSocket.accept();
+            Log.println(Log.DEBUG,"COnnection", "connected");
             serverSocket.close(); // the client was accepted no more need for socket
             System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
             handleClient(clientSocket);
+            Log.println(Log.DEBUG,"Client","Finished handling client");
             clientSocket.close();
             GlobalFileHolder.stopWriting = false;
 
@@ -72,19 +75,21 @@ public class HotSpot extends Thread{
 
     private void handleClient(Socket clientSocket) {
         Log.println(Log.INFO,"Connection","Succefully connected");
-        OutputStream outputStream = null;
+        DataOutputStream outputStream = null;
         InputStream inputStream = null;
         try {
             inputStream = clientSocket.getInputStream();
-            outputStream = clientSocket.getOutputStream();
+            outputStream = new DataOutputStream(clientSocket.getOutputStream());
+
             while(!fileHolder.stopWriting) {
+                Log.println(Log.DEBUG,"File Holder", "state: " + String.valueOf(fileHolder.stopWriting));
                 byte[] buffer = new byte[4096];
                 int bytesRead = inputStream.read(buffer);
 
                 if(!fileHolder.stopWriting)
                 {
                     parsePacket(buffer);
-                    writeToClient(outputStream, this.createResponse());
+                    writeToClient(outputStream);
                 }
             }
             fileHolder.endFileWriting();
@@ -99,30 +104,23 @@ public class HotSpot extends Thread{
         double elevation = packetParser.getElevation(message);
         double latitude = packetParser.getLatatiude(message);
         double longitude = packetParser.getLongtatiude(message);
-
+        Log.println(Log.DEBUG,"Connection Issues","Connection");
         this.fileHolder.writeToFile(latitude, longitude, elevation);
-        Drone_Control.setPosition(latitude,longitude);
+        Log.println(Log.DEBUG,"File Writing", "Written to File Succesfully");
+        this.fatherActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Drone_Control.setPosition(latitude,longitude);
+            }
+        });
     }
 
-    private byte[] createResponse()
-    {
-        byte[] message = new byte[24];
-
-        double latitude = Drone_Control.getLatitude() / 10000.0;
-        double longitude = Drone_Control.getLongitude() / 10000.0;
-        double elevation = Drone_Control.getElevation() / 10000.0;
-
-       ByteBuffer.wrap(message).putDouble(latitude);
-       ByteBuffer.wrap(message).putDouble(8,longitude);
-       ByteBuffer.wrap(message).putDouble(16,elevation);
-
-        return message;
-    }
-
-    private void writeToClient(OutputStream out, byte[] message)
+    private void writeToClient(DataOutputStream out)
     {
         try {
-            out.write(message);
+            out.writeDouble(Drone_Control.getLatitude() / 10000.0);
+            out.writeDouble(Drone_Control.getLongitude() / 10000.0);
+            out.writeDouble(Drone_Control.getElevation() / 10000.0);
             out.flush();
         }
         catch (IOException e)

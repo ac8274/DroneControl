@@ -1,5 +1,6 @@
 package com.example.dronecontrol;
 
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -119,6 +120,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         }
         else
         {
+
             this.fileHolder.stopWriting = true;
             createWritingAlert();
         }
@@ -148,7 +150,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
     {
         firebaseUpload.setTitle("Requirements");
         firebaseUpload.setMessage("Saving Track ...");
-
+        firebaseUpload.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view ->{});
         FireBaseUploader.uploadFile(this.file,UserUid.user_uid,".gpx",
                 new OnFailureListener() {
             @Override
@@ -167,6 +169,8 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         });
         firebaseUpload.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(null);
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -189,7 +193,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dronePos, 10));
 
-        HotSpot hotSpot = new HotSpot("0.0.0.0",4454);
+        HotSpot hotSpot = new HotSpot(4454,Drone_Control.this);
         hotSpot.start();
     }
 }
