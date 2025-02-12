@@ -80,7 +80,7 @@ public class HotSpot extends Thread{
         try {
             inputStream = clientSocket.getInputStream();
             outputStream = new DataOutputStream(clientSocket.getOutputStream());
-
+            this.fileHolder.startWriting();
             while(!fileHolder.stopWriting) {
                 Log.println(Log.DEBUG,"File Holder", "state: " + String.valueOf(fileHolder.stopWriting));
                 byte[] buffer = new byte[4096];

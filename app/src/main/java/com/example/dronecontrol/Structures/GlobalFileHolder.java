@@ -30,6 +30,10 @@ public class GlobalFileHolder {
             throw new StreamInUseException("Stream currently in use");
         }
     }
+    public void startWriting() throws IOException {
+        this.gpXparser.startWriting();
+        this.os.flush();
+    }
 
     public void writeToFile(double latitude, double longitude, double elevation)
     {

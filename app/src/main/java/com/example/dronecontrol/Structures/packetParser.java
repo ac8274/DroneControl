@@ -1,6 +1,7 @@
 package com.example.dronecontrol.Structures;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class packetParser {
     public static double getElevation(byte[]message)
@@ -23,6 +24,6 @@ public class packetParser {
         {
             temp[i-index] = message[i];
         }
-        return ByteBuffer.wrap(temp).getDouble();
+        return ByteBuffer.wrap(temp).order(ByteOrder.BIG_ENDIAN).getDouble();
     }
 }
