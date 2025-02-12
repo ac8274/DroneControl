@@ -82,11 +82,28 @@ public class Joystick extends View {
         containment_width = getWidth();
     }
 
-    public float getXDistance() {return mCirceleX - (float)containment_width/2;}
+    public double getXDistance() {return mCirceleX - (float)containment_width/2;}
 
-    public float getYDistance()
+    public double getYDistance()
     {
         return mCirceleY - (float) containment_height/2;
+    }
+
+    public double getDistanceFromCenter() {return Math.sqrt(Math.pow(this.getXDistance(),2) + Math.pow(this.getYDistance(),2));}
+
+
+    /**
+     * @return angle of the position in which the joystick is in.
+     */
+    //East = 0
+    public double getAngle()
+    {
+        double angle = Math.toDegrees(Math.atan2(this.getYDistance(),this.getXDistance()));
+        if(angle < 0);
+        {
+            angle += 360;
+        }
+        return angle;
     }
 
     @Override
@@ -100,7 +117,6 @@ public class Joystick extends View {
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                Log.println(Log.DEBUG,"Position", "circle X:"+ String.valueOf(event.getX()) + "\n circle Y" + String.valueOf(event.getY()));
                 if((event.getY() <= (int) containment_height) && (event.getY() >=0) && (event.getX() <= (int) containment_width) && (event.getX() >=0))
                 {
                     mCirceleY = event.getY(); // set new position X of joystickCenter

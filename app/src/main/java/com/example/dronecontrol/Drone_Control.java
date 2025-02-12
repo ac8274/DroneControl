@@ -82,25 +82,23 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
             droneMarker.setPosition(dronePos);
         }
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(dronePos));
+        //mMap.animateCamera(CameraUpdateFactory.newLatLng(dronePos));
     }
 
-    public static double getLongitude() {
-        double distance = rightJoystick.getYDistance();
-        while(distance > 10 || distance < -10)
+    public static double getCompassDegrees()
+    {
+        double current_angle = rightJoystick.getAngle();
+        current_angle -= 90;
+        if(current_angle < 0)
         {
-            distance = distance/10.0;
+            current_angle += 360;
         }
-        return distance;
+        current_angle = 360-current_angle;
+        return current_angle;
     }
 
-    public static double getLatitude() {
-        double distance = rightJoystick.getXDistance();
-        while(distance > 10 || distance < -10)
-        {
-            distance = distance/10.0;
-        }
-        return distance;
+    public static double getDistance() {
+        return rightJoystick.getDistanceFromCenter();
     }
 
     public static double getElevation() {
@@ -165,6 +163,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
                 firebaseUpload.dismiss();
                 Toast.makeText(Drone_Control.this, "Success", Toast.LENGTH_SHORT).show();
                 FireBaseUploader.deleteFile(file);
+                finish();
             }
         });
         firebaseUpload.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(null);

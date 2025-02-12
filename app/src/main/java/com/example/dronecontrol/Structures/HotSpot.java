@@ -86,7 +86,7 @@ public class HotSpot extends Thread{
                 byte[] buffer = new byte[4096];
                 int bytesRead = inputStream.read(buffer);
 
-                if(!fileHolder.stopWriting)
+                if(!fileHolder.stopWriting && bytesRead > 0)
                 {
                     parsePacket(buffer);
                     writeToClient(outputStream);
@@ -118,8 +118,8 @@ public class HotSpot extends Thread{
     private void writeToClient(DataOutputStream out)
     {
         try {
-            out.writeDouble(Drone_Control.getLatitude() / 10000.0);
-            out.writeDouble(Drone_Control.getLongitude() / 10000.0);
+            out.writeDouble(Drone_Control.getDistance());
+            out.writeDouble(Drone_Control.getCompassDegrees());
             out.writeDouble(Drone_Control.getElevation() / 10000.0);
             out.flush();
         }
