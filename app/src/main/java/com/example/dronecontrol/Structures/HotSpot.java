@@ -118,7 +118,8 @@ public class HotSpot extends Thread{
     private void writeToClient(DataOutputStream out)
     {
         try {
-            out.writeDouble(Drone_Control.getDistance());
+            Log.println(Log.DEBUG,"Degree",String.valueOf(Drone_Control.getCompassDegrees()));
+            out.writeDouble(Drone_Control.getDistance()/10);
             out.writeDouble(Drone_Control.getCompassDegrees());
             out.writeDouble(Drone_Control.getElevation() / 10000.0);
             out.flush();
