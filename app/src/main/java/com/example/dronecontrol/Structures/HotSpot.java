@@ -74,7 +74,7 @@ public class HotSpot extends Thread{
     }
 
     private void handleClient(Socket clientSocket) {
-        Log.println(Log.INFO,"Connection","Succefully connected");
+        // Log.println(Log.INFO,"Connection","Succefully connected");
         DataOutputStream outputStream = null;
         InputStream inputStream = null;
         try {
@@ -82,7 +82,7 @@ public class HotSpot extends Thread{
             outputStream = new DataOutputStream(clientSocket.getOutputStream());
             this.fileHolder.startWriting();
             while(!fileHolder.stopWriting) {
-                Log.println(Log.DEBUG,"File Holder", "state: " + String.valueOf(fileHolder.stopWriting));
+                // Log.println(Log.DEBUG,"File Holder", "state: " + String.valueOf(fileHolder.stopWriting));
                 byte[] buffer = new byte[4096];
                 int bytesRead = inputStream.read(buffer);
 
@@ -104,9 +104,9 @@ public class HotSpot extends Thread{
         double elevation = packetParser.getElevation(message);
         double latitude = packetParser.getLatatiude(message);
         double longitude = packetParser.getLongtatiude(message);
-        Log.println(Log.DEBUG,"Connection Issues","Connection");
+        //Log.println(Log.DEBUG,"Connection Issues","Connection");
         this.fileHolder.writeToFile(latitude, longitude, elevation);
-        Log.println(Log.DEBUG,"File Writing", "Written to File Succesfully");
+        //Log.println(Log.DEBUG,"File Writing", "Written to File Succesfully");
         this.fatherActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -118,7 +118,7 @@ public class HotSpot extends Thread{
     private void writeToClient(DataOutputStream out)
     {
         try {
-            Log.println(Log.DEBUG,"Degree",String.valueOf(Drone_Control.getCompassDegrees()));
+            // Log.println(Log.DEBUG,"Degree",String.valueOf(Drone_Control.getCompassDegrees()));
             out.writeDouble(Drone_Control.getDistance()/10);
             out.writeDouble(Drone_Control.getCompassDegrees());
             out.writeDouble(Drone_Control.getElevation() / 10000.0);

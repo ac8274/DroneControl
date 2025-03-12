@@ -96,11 +96,28 @@ public class Joystick extends View {
     //North = 0
     public double getAngle() // in need of remaking the angle finder
     {
-        double angle = Math.toDegrees(Math.atan(this.getYDistance()/this.getXDistance()));
-        if(angle < 0);
+        if(this.getXDistance() == 0)
         {
-            angle += 360;
+            if(this.getYDistance() > 0)
+            {
+                return 90;
+            }
+            else {
+                return 270;
+            }
         }
+        String circle_point = "(" + mCirceleX + ", " + mCirceleY + ")";
+        String Absolute_point = "(" + containment_width/2 + ", " + containment_height/2 + ")";
+        Log.println(Log.DEBUG, "Current Circle Point",circle_point);
+        Log.println(Log.DEBUG, "Absolute Circle Point",Absolute_point);
+        double angle = Math.atan((-1*this.getYDistance())/this.getXDistance());
+        // Log.println(Log.DEBUG, "joystick degree",String.valueOf(angle));
+        angle *= (180.0/Math.PI);
+        if(0 > this.getXDistance())
+        {
+            angle += 180;
+        }
+        Log.println(Log.DEBUG, "joystick degree",String.valueOf(angle));
         return angle;
     }
 

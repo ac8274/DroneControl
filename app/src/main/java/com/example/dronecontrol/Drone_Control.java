@@ -87,14 +87,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
     public static double getCompassDegrees()
     {
-        double current_angle = rightJoystick.getAngle();
-        current_angle -= 90;
-        if(current_angle < 0)
-        {
-            current_angle += 360;
-        }
-        current_angle = 360-current_angle;
-        return current_angle;
+        return (360 - rightJoystick.getAngle() + 90) % 360;
     }
 
     public static double getDistance() {
