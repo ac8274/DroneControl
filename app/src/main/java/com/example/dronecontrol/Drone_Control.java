@@ -53,15 +53,11 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         rightJoystick = findViewById(R.id.rightJoystick);
         leftJoystick = findViewById(R.id.leftJoystick);
         fileName = getIntent().getStringExtra("Track Name");
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        Log.println(Log.INFO,"app activation","activation");
         file = new File(this.getExternalFilesDir(null),fileName +".gpx");
         try {
             fileHolder = GlobalFileHolder.getInstance();
@@ -71,7 +67,6 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         } catch (StreamInUseException e) {
             throw new RuntimeException(e);
         }
-        Log.println(Log.INFO,"making the activity","for now everything is fine");
     }
 
     public static void setPosition(double latitude, double longitude)
@@ -100,7 +95,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         {
             distance = distance/10.0;
         }
-        return distance;
+        return -distance;
     }
 
     @Override
@@ -180,7 +175,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         mMap = googleMap;
 
         // Initial location
-        LatLng dronePos = new LatLng(-34,151);
+        LatLng dronePos = new LatLng(31.27379972458028,34.80235696568683);
         droneMarker = mMap.addMarker(new MarkerOptions().position(dronePos).title("Drone Location"));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dronePos, 10));
