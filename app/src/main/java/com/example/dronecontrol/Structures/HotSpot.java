@@ -52,13 +52,14 @@ public class HotSpot extends Thread{
         try {
             // Bind to the Hotspot IP and a specific port
             serverSocket = new ServerSocket(PORT);
+
             System.out.println("Server started" + ":" + PORT);
 
             // Listen for incoming connections
             Socket clientSocket = serverSocket.accept();
-            Log.println(Log.DEBUG,"COnnection", "connected");
+            Log.println(Log.DEBUG,"Connection", "connected");
             serverSocket.close(); // the client was accepted no more need for socket
-            System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
+            //System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
             handleClient(clientSocket);
             Log.println(Log.DEBUG,"Client","Finished handling client");
             clientSocket.close();
