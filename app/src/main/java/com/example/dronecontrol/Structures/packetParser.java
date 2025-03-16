@@ -16,8 +16,7 @@ public class packetParser {
     {
         return extractDouble(message,0);
     }
-    private static double extractDouble(byte[] message, int index)
-    {
+    private static double extractDouble(byte[] message, int index) {
         byte[] temp = new byte[8];
         int end_index = index + 8;
         for(int i = index; i < end_index;i++)

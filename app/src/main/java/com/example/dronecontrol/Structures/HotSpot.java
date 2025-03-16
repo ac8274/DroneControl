@@ -20,9 +20,7 @@ public class HotSpot extends Thread{
     private ServerSocket serverSocket;
     private Activity fatherActivity;
     private int PORT; // Port to listen on
-    private static final String TAG = "ServerThread";
     private GlobalFileHolder fileHolder;
-    //private Context context;
 
     public HotSpot(int port,Activity activity)//, Context context
     {
@@ -67,7 +65,7 @@ public class HotSpot extends Thread{
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(TAG, "Exception in ServerThread: " + e.getMessage());
+            Log.e("ServerThread", "Exception in ServerThread: " + e.getMessage());
         }
         finally {
             stopServer();

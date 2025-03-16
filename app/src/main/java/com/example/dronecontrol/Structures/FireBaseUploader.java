@@ -19,8 +19,9 @@ public final class FireBaseUploader {
     private FireBaseUploader()
     {
     }
-    public static void uploadFile(File file, String userUID,String fileType,OnFailureListener failureListener, OnSuccessListener successListener)
-    {
+    public static void uploadFile(File file, String userUID,String fileType,
+                                  OnFailureListener failureListener,
+                                  OnSuccessListener successListener) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference ref = storage.getReference().child("userFiles/"+
                 userUID+"/"+fileType+"Files/"+file.getName());
@@ -30,8 +31,7 @@ public final class FireBaseUploader {
         uploadTask.addOnFailureListener(failureListener).addOnSuccessListener(successListener);
     }
 
-    public static void deleteFile(File file)
-    {
+    public static void deleteFile(File file) {
         if(file.exists())
         {
             file.delete();

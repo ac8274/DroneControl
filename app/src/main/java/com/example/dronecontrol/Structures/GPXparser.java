@@ -14,8 +14,8 @@ import java.util.Calendar;
 
 public class GPXparser {
     private XmlSerializer serializer;
-    public GPXparser(FileOutputStream fous)
-    {
+
+    public GPXparser(FileOutputStream fous) {
         this.serializer = Xml.newSerializer();
         try {
             this.serializer.setOutput(fous,"UTF-8");
