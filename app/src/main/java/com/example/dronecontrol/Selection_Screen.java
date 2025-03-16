@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,8 +66,8 @@ public class Selection_Screen extends AppCompatActivity {
         wifiHotspotAlert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {  // set new behaviour for the positive button
             if(checkHotSpot())
             {
-                wifiHotspotAlert.dismiss();
-                startNextActivity(Drone_Control.class);
+                wifiHotspotAlert.cancel();
+                getFileName();
             }
         });
     }
@@ -78,13 +79,37 @@ public class Selection_Screen extends AppCompatActivity {
         }
         else
         {
-            startNextActivity(Drone_Control.class);
+            getFileName();
         }
     }
 
-    public void startNextActivity(Class <?> cls)
+    public void getFileName()
+    {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setCancelable(false);
+        adb.setTitle("Track name");
+
+        final EditText fileNameET = new EditText(this);
+        fileNameET.setHint("Type File Name HERE!");
+        adb.setView(fileNameET);
+        adb.setPositiveButton("Save",null);
+
+        AlertDialog fileNameAD = adb.create();
+        fileNameAD.show();
+
+        fileNameAD.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            if(!fileNameET.getText().toString().isEmpty())
+            {
+                fileNameAD.cancel();
+                startNextActivity(Drone_Control.class,fileNameET.getText().toString());
+            }
+        });
+    }
+
+    public void startNextActivity(Class <?> cls, String fileName)
     {
         Intent nextActivity = new Intent(this,cls);
+        nextActivity.putExtra("Track Name",fileName);
         startActivity(nextActivity);
     }
 
