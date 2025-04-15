@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -39,6 +40,11 @@ public final class FireBaseUploader {
     public static void uploadFileInfo(TrackInfo info)
     {
         FirebaseDatabase.getInstance().getReference("Users").child(UserUid.user_uid).child(info.getTrackName()).setValue(info);
+    }
+
+    public static DatabaseReference getDBReference()
+    {
+        return FirebaseDatabase.getInstance().getReference("Users");
     }
 
 }
