@@ -55,11 +55,11 @@ public class HotSpot extends Thread{
 
             // Listen for incoming connections
             Socket clientSocket = serverSocket.accept();
-            Log.println(Log.DEBUG,"Connection", "connected");
+            //Log.println(Log.DEBUG,"Connection", "connected");
             serverSocket.close(); // the client was accepted no more need for socket
             //System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
             handleClient(clientSocket);
-            Log.println(Log.DEBUG,"Client","Finished handling client");
+            //Log.println(Log.DEBUG,"Client","Finished handling client");
             clientSocket.close();
             GlobalFileHolder.stopWriting = false;
 

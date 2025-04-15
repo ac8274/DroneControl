@@ -114,6 +114,6 @@ public class Selection_Screen extends AppCompatActivity {
     }
 
     public void Go_To_DroneTracks_Selection(View view) {
-
+        startNextActivity(Track_selection.class,"");
     }
 }
