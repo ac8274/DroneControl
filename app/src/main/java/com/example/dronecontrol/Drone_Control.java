@@ -3,8 +3,10 @@ package com.example.dronecontrol;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import com.example.dronecontrol.CustomExceptions.StreamInUseException;
 import com.example.dronecontrol.CustomViews.Joystick;
 import com.example.dronecontrol.Structures.GlobalFileHolder;
 import com.example.dronecontrol.Structures.HotSpot;
+import com.example.dronecontrol.Structures.TrackInfo;
 import com.example.dronecontrol.Structures.UserUid;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,9 +33,14 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.example.dronecontrol.Structures.FireBaseUploader;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class Drone_Control extends AppCompatActivity implements OnMapReadyCallback {
@@ -44,15 +52,18 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
     private GlobalFileHolder fileHolder;
     private AlertDialog firebaseUpload;
     private static Marker droneMarker; // Marker for the drone
+    private TrackInfo trackInfo;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drone_control);
+
         rightJoystick = findViewById(R.id.rightJoystick);
         leftJoystick = findViewById(R.id.leftJoystick);
         fileName = getIntent().getStringExtra("Track Name");
+        setTrackInfo();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
@@ -67,6 +78,14 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         } catch (StreamInUseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setTrackInfo()
+    {
+        this.trackInfo = new TrackInfo(this.fileName);
+        this.trackInfo.setTrackFileUri("userFiles/"+UserUid.user_uid+"/.gpxFiles/"+this.fileName+".gpx");
+        this.trackInfo.setFlightDate(new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime()));
+        this.trackInfo.setFlightStartTime(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
     }
 
     public static void setPosition(double latitude, double longitude)
@@ -106,7 +125,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         }
         else
         {
-
+            this.trackInfo.setFlightEndTime(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
             this.fileHolder.stopWriting = true;
             createWritingAlert();
         }
@@ -149,6 +168,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 firebaseUpload.dismiss();
+                FireBaseUploader.uploadFileInfo(trackInfo);
                 Toast.makeText(Drone_Control.this, "Success", Toast.LENGTH_SHORT).show();
                 FireBaseUploader.deleteFile(file);
                 finish();
@@ -171,7 +191,6 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        Log.println(Log.DEBUG,"map ready","Map is ready");
         mMap = googleMap;
 
         // Initial location
@@ -182,5 +201,8 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
         HotSpot hotSpot = new HotSpot(4454,Drone_Control.this);
         hotSpot.start();
+    }
+
+    public void Go_To_DroneTracks_Selection(View view) {
     }
 }

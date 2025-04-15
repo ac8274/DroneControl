@@ -1,14 +1,11 @@
 package com.example.dronecontrol.Structures;
 
-import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import android.net.Uri;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -37,6 +34,11 @@ public final class FireBaseUploader {
             file.delete();
             System.out.println("file deleted");
         }
+    }
+
+    public static void uploadFileInfo(TrackInfo info)
+    {
+        FirebaseDatabase.getInstance().getReference("Users").child(UserUid.user_uid).child(info.getTrackName()).setValue(info);
     }
 
 }
