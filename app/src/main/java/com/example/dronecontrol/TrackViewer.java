@@ -64,6 +64,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                 }
                 KmlLayer layer = new KmlLayer(mMap,new FileInputStream(file),this);
                 layer.addLayerToMap();
+                //hbh
             }
 
         } catch (URISyntaxException e) {
