@@ -1,9 +1,6 @@
 package com.example.dronecontrol;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,19 +25,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.example.dronecontrol.Structures.FireBaseUploader;
+import com.example.dronecontrol.Structures.FireBaseHelper;
 
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class Drone_Control extends AppCompatActivity implements OnMapReadyCallback {
@@ -156,7 +149,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         firebaseUpload.setTitle("Requirements");
         firebaseUpload.setMessage("Saving Track ...");
         firebaseUpload.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view ->{});
-        FireBaseUploader.uploadFile(this.file,UserUid.user_uid,".gpx",
+        FireBaseHelper.uploadFile(this.file,UserUid.user_uid,".gpx",
                 new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -168,9 +161,9 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 firebaseUpload.dismiss();
-                FireBaseUploader.uploadFileInfo(trackInfo);
+                FireBaseHelper.uploadFileInfo(trackInfo);
                 Toast.makeText(Drone_Control.this, "Success", Toast.LENGTH_SHORT).show();
-                FireBaseUploader.deleteFile(file);
+                FireBaseHelper.deleteFile(file);
                 finish();
             }
         });
@@ -201,8 +194,5 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
         HotSpot hotSpot = new HotSpot(4454,Drone_Control.this);
         hotSpot.start();
-    }
-
-    public void Go_To_DroneTracks_Selection(View view) {
     }
 }

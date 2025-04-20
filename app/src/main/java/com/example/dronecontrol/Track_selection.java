@@ -1,7 +1,10 @@
 package com.example.dronecontrol;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -11,16 +14,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.dronecontrol.Adapters.trackAdapter;
-import com.example.dronecontrol.Structures.FireBaseUploader;
+import com.example.dronecontrol.Structures.FireBaseHelper;
 import com.example.dronecontrol.Structures.TrackInfo;
 import com.example.dronecontrol.Structures.UserUid;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 
-public class Track_selection extends AppCompatActivity {
+public class Track_selection extends AppCompatActivity implements AdapterView.OnItemClickListener {
     TextView Title;
     ArrayList<TrackInfo> tracksList;
     trackAdapter tracksAdapter;
@@ -34,6 +41,7 @@ public class Track_selection extends AppCompatActivity {
 
         Title = findViewById(R.id.Title);
         tracksListView = findViewById(R.id.tracksListView);
+        tracksListView.setOnItemClickListener(this);
 
         tracksList = new ArrayList<TrackInfo>();
         tracksAdapter = new trackAdapter(this,tracksList);
@@ -50,7 +58,7 @@ public class Track_selection extends AppCompatActivity {
 
     private void getTracksList()
     {
-        FireBaseUploader.getDBReference().child(UserUid.user_uid).addValueEventListener(new ValueEventListener() {
+        FireBaseHelper.getDBReference().child(UserUid.user_uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 tracksList.clear();
@@ -67,4 +75,28 @@ public class Track_selection extends AppCompatActivity {
         });
     }
 
+    private void startNextActivity(Uri uri)
+    {
+        Intent intent = new Intent(this, TrackViewer.class);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        File file = new File(this.getExternalFilesDir(null),tracksList.get(position).getTrackName() +".gpx");
+        FireBaseHelper.downloadFile(file, tracksList.get(position).getTrackFileUri(),
+                new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // need to add a alert dialog later.
+                startNextActivity(Uri.fromFile(file));
+            }
+        },new OnFailureListener(){
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // need to add a alert dialog later.
+            }
+        } );
+    }
 }
