@@ -52,12 +52,20 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
     {
         try
         {
-            File file = new File(new URI(data.toString())); // experimental and unsafe. need to add file checking.
+            String filePath = data.getPath();
+            String extension = String.valueOf(filePath.charAt(filePath.length() - 3)) + //extract the extension which should be no more than 3 letters.
+                    String.valueOf(filePath.charAt(filePath.length() - 2)) +
+                    String.valueOf(filePath.charAt(filePath.length() - 1));
+            if(extension.equals("gpx") || extension.equals("kml")) {
+                File file = new File(new URI(data.toString())); // experimental and unsafe. need to add file checking.
+                if (extension.equals("gpx"))
+                {
+                    // do file conversion.
+                }
+                KmlLayer layer = new KmlLayer(mMap,new FileInputStream(file),this);
+                layer.addLayerToMap();
+            }
 
-            // conversion/check of the file must be done here.
-
-            KmlLayer layer = new KmlLayer(mMap,new FileInputStream(file),this);
-            layer.addLayerToMap();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         } catch (FileNotFoundException e) {
@@ -67,6 +75,12 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void checkFileExtension(String filePath)
+    {
+
+
     }
 
     @Override
