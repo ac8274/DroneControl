@@ -17,13 +17,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.maps.android.data.kml.KmlLayer;
 
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -57,11 +60,35 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                     String.valueOf(filePath.charAt(filePath.length() - 2)) +
                     String.valueOf(filePath.charAt(filePath.length() - 1));
             if(extension.equals("gpx") || extension.equals("kml")) {
-                File file = new File(new URI(data.toString())); // experimental and unsafe. need to add file checking.
+                File file = null;
                 if (extension.equals("gpx"))
                 {
-                    // do file conversion.
+                    file = new File(this.getExternalFilesDir(null), "temporary.kml");
+
+                    String cords = "";
+
+                    InputStream inputStream = getContentResolver().openInputStream(data);
+
+                    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                    factory.setNamespaceAware(true);
+                    XmlPullParser parser = factory.newPullParser();
+
+                    parser.setInput(inputStream,"UTF-8");
+                    int eventType = parser.getEventType();
+                    while(eventType != XmlPullParser.END_DOCUMENT)
+                    {
+                        if(eventType == XmlPullParser.START_TAG && parser.getName().equals("wpt")) {
+                            cords = cords + parser.getAttributeValue(null, "lon")  +
+                                    "," + parser.getAttributeValue(null, "lat") +
+                                    ", 304\n"; // 304 = elevation
+                        }
+                        parser.next();
+                    }
                 }
+                else {
+                    file = new File(new URI(data.toString())); // experimental and unsafe. need to add file checking.
+                }
+
                 KmlLayer layer = new KmlLayer(mMap,new FileInputStream(file),this);
                 layer.addLayerToMap();
             }
@@ -75,12 +102,6 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void checkFileExtension(String filePath)
-    {
-
-
     }
 
     @Override
