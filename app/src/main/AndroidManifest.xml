@@ -21,9 +21,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DroneControl"
         tools:targetApi="31">
+        <provider
+            android:name=".GpxProvider"
+            android:authorities="com.example.DroneControl.GPXProvider"
+            android:enabled="true"
+            android:exported="true"></provider>
+
         <activity
             android:name=".TrackViewer"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="file" android:pathPattern=".*\\.gpx" />
+                <data android:mimeType="application/gpx+xml" />
+                <data android:mimeType="application/octet-stream" /> </intent-filter>
+        </activity>
         <activity
             android:name=".Track_selection"
             android:exported="false" />
