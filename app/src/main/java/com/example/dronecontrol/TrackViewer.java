@@ -66,15 +66,10 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                     file = new File(this.getExternalFilesDir(null), "temporary.kml");
 
                     boolean firstPoint = true;
-                    boolean firstElevation = true;
 
-                    String startLon = "";
-                    String startLat = "";
-                    String startEle = "300";
+                    String startPoint = "";
 
-                    String LastLon = "";
-                    String LastLat = "";
-                    String LastEle = "300";
+                    String LastPoint = "";
 
                     String cords = "";
 
@@ -86,39 +81,39 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
 
                     parser.setInput(inputStream,"UTF-8");
                     int eventType = parser.getEventType();
-                    while(eventType != XmlPullParser.END_DOCUMENT)
+                    while(eventType != XmlPullParser.END_DOCUMENT) // run until end of file
                     {
-                        if(eventType == XmlPullParser.START_TAG && parser.getName().equals("wpt")) {
-                            LastLon = parser.getAttributeValue(null, "lon");
-                            LastLat = parser.getAttributeValue(null, "lat");
+                        if(eventType == XmlPullParser.START_TAG && parser.getName().equals("wpt")) { //point found
+                            LastPoint = parser.getAttributeValue(null, "lon") + parser.getAttributeValue(null, "lat") + "300\n"; // put a default elevation
 
-                            cords += LastLon  + "," + LastLat + ",300\n";
-                            // add the lat and lon to the string which contains the coordinates.
-                        }
-                        else if(eventType == XmlPullParser.START_TAG && parser.getName().equals("ele"))
-                        {
-                            cords = cords.substring(0,cords.length()-4);
-                            LastEle = parser.getText();
-                            cords += LastEle + "\n"; // after adding the elevation
-                            // continue to new cords, with the \n for the next cord.
+                            while(eventType != XmlPullParser.END_TAG && parser.getName().equals("wpt")) // search inside the point for elevation value
+                            {
+                                if(eventType == XmlPullParser.START_TAG && parser.getName().equals("ele")) // elevation value found
+                                {
+                                    LastPoint = LastPoint.substring(0,LastPoint.length() - 4);
+                                    LastPoint += parser.getText() + '\n'; // adding elevation
+                                    // continue to new cords, with the \n for the next cord.
+                                }
+
+                                parser.next();// move forward in the xml file
+                                eventType = parser.getEventType();// get the event which it is
+                            }
+
+                            if(firstPoint)
+                            {
+                                startPoint = LastPoint; // save the first point
+                                firstPoint = false; // turn off the first point saving
+                            }
+
+                            cords += LastPoint; // add latest point to the coordinates list
                         }
 
-                        if(firstPoint)
-                        {
-                            startLon = LastLon;
-                            startLat = LastLat;
-                            firstPoint = false;
-                        }
-                        if(firstElevation)
-                        {
-                            startEle = LastEle;
-                            firstElevation = false;
-                        }
-                        parser.next();
+                        parser.next(); // move forward in the xml file
+                        eventType = parser.getEventType();//get the event which it is
                     }
                 }
                 else {
-                    file = new File(new URI(data.toString())); // experimental and unsafe. need to add file checking.
+                    file = new File(new URI(data.toString()));// experimental and unsafe. need to add file checking.
                 }
 
                 KmlLayer layer = new KmlLayer(mMap,new FileInputStream(file),this);

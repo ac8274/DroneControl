@@ -34,6 +34,7 @@ public class KMLparser {
                 .text("1")
                 .endTag(null,"open");
 
+
         this.serializer.startTag(null,"Style")
                 .attribute(null,"id", "StartIconStyle");
         this.serializer.startTag(null,"IconStyle")
@@ -50,6 +51,7 @@ public class KMLparser {
                 .endTag(null,"scale");
         this.serializer.endTag(null,"LabelStyle");
         this.serializer.endTag(null,"Style");
+
 
         this.serializer.startTag(null,"Style")
                 .attribute(null,"id", "FinishIconStyle");
@@ -80,6 +82,7 @@ public class KMLparser {
         this.serializer.endTag(null,"LineStyle");
         this.serializer.endTag(null,"Style");
 
+
         this.serializer.startTag(null,"Style")
                 .attribute(null,"id", "WaypointIconStyle");
         this.serializer.startTag(null,"IconStyle")
@@ -102,7 +105,95 @@ public class KMLparser {
                 .endTag(null,"scale");
         this.serializer.endTag(null,"LabelStyle");
         this.serializer.endTag(null,"Style");
-        
+
+        this.serializer.flush(); // wright all of the above into the file.
+    }
+
+
+    public void writeCloseUpPoint(String lon, String lan) throws IOException {
+        this.serializer.startTag(null,"LookAt");
+        this.serializer.startTag(null,"longitude")
+                .text(lon)
+                .endTag(null,"longitude");
+        this.serializer.startTag(null,"latitude")
+                .text(lan)
+                .endTag(null,"latitude");
+        this.serializer.startTag(null,"range")
+                .text("400")
+                .endTag(null,"range");
+        this.serializer.startTag(null,"tilt")
+                .text("60")
+                .endTag(null,"tilt");
+        this.serializer.startTag(null,"altitudeMode")
+                .text("clampToGround")
+                .endTag(null,"altitudeMode");
+        this.serializer.endTag(null,"LookAt");
+
+        this.serializer.flush(); // wright all of the above into the file.
+    }
+
+    public void writeRoute(String startPoint, String endPoint, String routeCords, String routeName) throws IOException {
+        this.serializer.startTag(null,"Folder")
+                .attribute(null,"id", "Routenull");
+        this.serializer.startTag(null,"name")
+                .text(routeName)
+                .endTag(null,"name");
+        this.serializer.startTag(null,"Placemark");
+        this.serializer.startTag(null,"name")
+                .text("Drone Flight Route")
+                .endTag(null,"name");
+        this.serializer.startTag(null,"styleUrl")
+                .text("#RoutePath")
+                .endTag(null,"styleUrl");
+        this.serializer.startTag(null,"LineString")
+                .attribute(null, "id","Route");
+        this.serializer.startTag(null,"extrude")
+                .text("0")
+                .endTag(null,"extrude");
+        this.serializer.startTag(null,"tessellate")
+                .text("1")
+                .endTag(null,"tessellate");
+        this.serializer.startTag(null,"coordinates")
+                .text(routeCords)
+                .endTag(null,"coordinates");
+        this.serializer.endTag(null,"LineString");
+        this.serializer.endTag(null,"Placemark");
+
+
+        this.serializer.startTag(null,"Placemark");
+        this.serializer.startTag(null,"name")
+                .text("START")
+                .endTag(null,"name");
+        this.serializer.startTag(null,"styleUrl")
+                .text("#StartIconStyle")
+                .endTag(null,"styleUrl");
+        this.serializer.startTag(null,"Point");
+        this.serializer.startTag(null,"coordinates")
+                .text(startPoint)
+                .endTag(null,"coordinates");
+        this.serializer.endTag(null,"Point");
+        this.serializer.endTag(null,"Placemark");
+
+
+        this.serializer.startTag(null,"Placemark");
+        this.serializer.startTag(null,"name")
+                .text("FINISH")
+                .endTag(null,"name");
+        this.serializer.startTag(null,"styleUrl")
+                .text("#FinishIconStyle")
+                .endTag(null,"styleUrl");
+        this.serializer.startTag(null,"Point");
+        this.serializer.startTag(null,"coordinates")
+                .text(endPoint)
+                .endTag(null,"coordinates");
+        this.serializer.endTag(null,"Point");
+        this.serializer.endTag(null,"Placemark");
+
+        this.serializer.endTag(null,"Folder");
+        this.serializer.endTag(null,"Document");
+        this.serializer.endTag(null,"kml");
+
+        this.serializer.flush(); // wright all of the above into the file.
     }
 
 
