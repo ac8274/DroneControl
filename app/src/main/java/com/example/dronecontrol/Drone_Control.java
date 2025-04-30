@@ -70,6 +70,8 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
             throw new RuntimeException(e);
         } catch (StreamInUseException e) {
             throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

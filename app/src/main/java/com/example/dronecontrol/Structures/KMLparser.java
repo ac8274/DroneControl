@@ -192,6 +192,7 @@ public class KMLparser {
         this.serializer.endTag(null,"Folder");
         this.serializer.endTag(null,"Document");
         this.serializer.endTag(null,"kml");
+        this.serializer.endDocument();
 
         this.serializer.flush(); // wright all of the above into the file.
     }

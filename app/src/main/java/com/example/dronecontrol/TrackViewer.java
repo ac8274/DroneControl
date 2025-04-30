@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.dronecontrol.Structures.KMLparser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -24,6 +25,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -63,7 +65,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                 File file = null;
                 if (extension.equals("gpx"))
                 {
-                    file = new File(this.getExternalFilesDir(null), "temporary.kml");
+                    file = new File(this.getExternalFilesDir(null), "DroneRoute.kml");
 
                     boolean firstPoint = true;
 
@@ -81,10 +83,11 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
 
                     parser.setInput(inputStream,"UTF-8");
                     int eventType = parser.getEventType();
-                    while(eventType != XmlPullParser.END_DOCUMENT) // run until end of file
+                    while(eventType != XmlPullParser.END_DOCUMENT)// run until end of file
                     {
                         if(eventType == XmlPullParser.START_TAG && parser.getName().equals("wpt")) { //point found
-                            LastPoint = parser.getAttributeValue(null, "lon") + parser.getAttributeValue(null, "lat") + "300\n"; // put a default elevation
+                            LastPoint = parser.getAttributeValue(null, "lon")+ "," +
+                                    parser.getAttributeValue(null, "lat") + ",300\n"; // put a default elevation
 
                             while(eventType != XmlPullParser.END_TAG && parser.getName().equals("wpt")) // search inside the point for elevation value
                             {
@@ -93,6 +96,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                                     LastPoint = LastPoint.substring(0,LastPoint.length() - 4);
                                     LastPoint += parser.getText() + '\n'; // adding elevation
                                     // continue to new cords, with the \n for the next cord.
+                                    break; // baby proofing.
                                 }
 
                                 parser.next();// move forward in the xml file
@@ -111,9 +115,18 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                         parser.next(); // move forward in the xml file
                         eventType = parser.getEventType();//get the event which it is
                     }
+
+                    int firstIndex = startPoint.indexOf(',');
+                    int lastIndex = startPoint.lastIndexOf(',');
+
+                    FileOutputStream os = new FileOutputStream(file);
+                    KMLparser kmLparser = new KMLparser(os);
+                    kmLparser.startWriting();
+                    kmLparser.writeCloseUpPoint( startPoint.substring(0,firstIndex), startPoint.substring(firstIndex + 1,lastIndex) );
+                    kmLparser.writeRoute( startPoint, LastPoint, cords, data.toString().substring(data.toString().lastIndexOf('/') + 1) );
                 }
                 else {
-                    file = new File(new URI(data.toString()));// experimental and unsafe. need to add file checking.
+                    file = new File(new URI(data.toString()));//experimental and unsafe. need to add file checking.
                 }
 
                 KmlLayer layer = new KmlLayer(mMap,new FileInputStream(file),this);
