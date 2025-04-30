@@ -35,6 +35,7 @@ import java.net.URISyntaxException;
 public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback {
     private static GoogleMap mMap;
     private Intent gi;
+    private Uri data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +48,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         gi = getIntent();
-        Uri data = gi.getData();
-
-        fileSetUp(data);
-
+         data = gi.getData();
     }
 
     private void fileSetUp(Uri data)
@@ -146,6 +144,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-
+        mMap = googleMap;
+        fileSetUp(data);
     }
 }
