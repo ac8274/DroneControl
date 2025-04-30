@@ -65,6 +65,17 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                 {
                     file = new File(this.getExternalFilesDir(null), "temporary.kml");
 
+                    boolean firstPoint = true;
+                    boolean firstElevation = true;
+
+                    String startLon = "";
+                    String startLat = "";
+                    String startEle = "300";
+
+                    String LastLon = "";
+                    String LastLat = "";
+                    String LastEle = "300";
+
                     String cords = "";
 
                     InputStream inputStream = getContentResolver().openInputStream(data);
@@ -78,9 +89,30 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                     while(eventType != XmlPullParser.END_DOCUMENT)
                     {
                         if(eventType == XmlPullParser.START_TAG && parser.getName().equals("wpt")) {
-                            cords = cords + parser.getAttributeValue(null, "lon")  +
-                                    "," + parser.getAttributeValue(null, "lat") +
-                                    ", 304\n"; // 304 = elevation
+                            LastLon = parser.getAttributeValue(null, "lon");
+                            LastLat = parser.getAttributeValue(null, "lat");
+
+                            cords += LastLon  + "," + LastLat + ",300\n";
+                            // add the lat and lon to the string which contains the coordinates.
+                        }
+                        else if(eventType == XmlPullParser.START_TAG && parser.getName().equals("ele"))
+                        {
+                            cords = cords.substring(0,cords.length()-4);
+                            LastEle = parser.getText();
+                            cords += LastEle + "\n"; // after adding the elevation
+                            // continue to new cords, with the \n for the next cord.
+                        }
+
+                        if(firstPoint)
+                        {
+                            startLon = LastLon;
+                            startLat = LastLat;
+                            firstPoint = false;
+                        }
+                        if(firstElevation)
+                        {
+                            startEle = LastEle;
+                            firstElevation = false;
                         }
                         parser.next();
                     }
