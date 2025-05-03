@@ -165,7 +165,6 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
                 firebaseUpload.dismiss();
                 FireBaseHelper.uploadFileInfo(trackInfo);
                 Toast.makeText(Drone_Control.this, "Success", Toast.LENGTH_SHORT).show();
-                FireBaseHelper.deleteFile(file);
                 finish();
             }
         });
@@ -178,6 +177,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
     protected void onDestroy() {
         try {
             GlobalFileHolder.getInstance().closeStream();
+            FireBaseHelper.deleteFile(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

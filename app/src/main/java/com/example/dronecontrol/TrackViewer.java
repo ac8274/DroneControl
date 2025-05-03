@@ -42,13 +42,13 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_viewer);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.track_viewer);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         gi = getIntent();
-         data = gi.getData();
+        data = gi.getData();
     }
 
     private void fileSetUp(Uri data)
@@ -86,11 +86,13 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                         if(eventType == XmlPullParser.START_TAG && parser.getName().equals("wpt")) { //point found
                             LastPoint = parser.getAttributeValue(null, "lon")+ "," +
                                     parser.getAttributeValue(null, "lat") + ",300\n"; // put a default elevation
+                            parser.next();
 
-                            while(eventType != XmlPullParser.END_TAG && parser.getName().equals("wpt")) // search inside the point for elevation value
+                            while(!parser.getName().equals("wpt")) // search inside the point for elevation value
                             {
-                                if(eventType == XmlPullParser.START_TAG && parser.getName().equals("ele")) // elevation value found
+                                if(parser.getName().equals("ele") && eventType == XmlPullParser.START_TAG) // elevation value found
                                 {
+                                    parser.next();
                                     LastPoint = LastPoint.substring(0,LastPoint.length() - 4);
                                     LastPoint += parser.getText() + '\n'; // adding elevation
                                     // continue to new cords, with the \n for the next cord.
@@ -120,7 +122,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                     FileOutputStream os = new FileOutputStream(file);
                     KMLparser kmLparser = new KMLparser(os);
                     kmLparser.startWriting();
-                    kmLparser.writeCloseUpPoint( startPoint.substring(0,firstIndex), startPoint.substring(firstIndex + 1,lastIndex) );
+                    kmLparser.writeCloseUpPoint(startPoint.substring(0,firstIndex), startPoint.substring(firstIndex + 1,lastIndex) );
                     kmLparser.writeRoute( startPoint, LastPoint, cords, data.toString().substring(data.toString().lastIndexOf('/') + 1) );
                 }
                 else {

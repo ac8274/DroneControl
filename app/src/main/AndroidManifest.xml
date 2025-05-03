@@ -21,11 +21,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DroneControl"
         tools:targetApi="31">
+
         <provider
             android:name=".GpxProvider"
-            android:authorities="com.example.DroneControl.GPXProvider"
+            android:authorities="com.example.dronecontrol.gpxprovider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <activity
             android:name=".TrackViewer"
@@ -34,9 +40,23 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="file" android:pathPattern=".*\\.gpx" />
+                <data android:scheme="content"
+                    tools:ignore="AppLinkUrlError" />
                 <data android:mimeType="application/gpx+xml" />
-                <data android:mimeType="application/octet-stream" /> </intent-filter>
+                <data android:mimeType="application/octet-stream" />
+                <data android:pathPattern=".*\\.gpx" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content"
+                    tools:ignore="AppLinkUrlError" />
+                <data android:mimeType="application/vnd.google-earth.kml+xml" />
+                <data android:mimeType="application/octet-stream" /> <!-- Some KML apps use this -->
+                <data android:pathPattern=".*\\.kml" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Track_selection"

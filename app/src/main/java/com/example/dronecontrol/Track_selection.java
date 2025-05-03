@@ -1,6 +1,7 @@
 package com.example.dronecontrol;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 
 import com.example.dronecontrol.Adapters.trackAdapter;
@@ -47,6 +49,8 @@ public class Track_selection extends AppCompatActivity implements AdapterView.On
         tracksAdapter = new trackAdapter(this,tracksList);
         tracksListView.setAdapter(tracksAdapter);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // locks the screen in the horizontol state.
+
         gi = getIntent();
     }
 
@@ -75,10 +79,15 @@ public class Track_selection extends AppCompatActivity implements AdapterView.On
         });
     }
 
-    private void startNextActivity(Uri uri)
+    private void startNextActivity(File file)
     {
-        Intent intent = new Intent(this, TrackViewer.class);
-        intent.setData(uri);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(
+                Uri.parse("content://com.example.dronecontrol.gpxprovider/gpx_file/" + Uri.encode(file.getAbsolutePath())),
+                "application/gpx+xml" // or "application/vnd.google-earth.kml+xml"
+        );
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(intent);
     }
 
@@ -90,7 +99,7 @@ public class Track_selection extends AppCompatActivity implements AdapterView.On
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 // need to add a alert dialog later.
-                startNextActivity(Uri.fromFile(file));
+                startNextActivity(file);
             }
         },new OnFailureListener(){
             @Override
