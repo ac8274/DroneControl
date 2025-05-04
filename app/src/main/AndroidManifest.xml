@@ -43,19 +43,8 @@
                 <data android:scheme="content"
                     tools:ignore="AppLinkUrlError" />
                 <data android:mimeType="application/gpx+xml" />
-                <data android:mimeType="application/octet-stream" />
-                <data android:pathPattern=".*\\.gpx" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="content"
-                    tools:ignore="AppLinkUrlError" />
                 <data android:mimeType="application/vnd.google-earth.kml+xml" />
                 <data android:mimeType="application/octet-stream" /> <!-- Some KML apps use this -->
-                <data android:pathPattern=".*\\.kml" />
             </intent-filter>
         </activity>
         <activity
