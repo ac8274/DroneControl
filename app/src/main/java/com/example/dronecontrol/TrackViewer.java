@@ -16,9 +16,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.dronecontrol.Structures.KMLparser;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.data.kml.KmlLayer;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -53,6 +55,8 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
      */
     private Uri data;
 
+    private String closeUpPoint;
+
     /**
      * Constant indicating that the file type is not supported.
      */
@@ -78,6 +82,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         gi = getIntent();
         data = gi.getData();
+        closeUpPoint = null;
     }
 
     /**
@@ -150,6 +155,8 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                     int firstIndex = startPoint.indexOf(',');
                     int lastIndex = startPoint.lastIndexOf(',');
 
+                    closeUpPoint = startPoint;
+
                     FileOutputStream os = new FileOutputStream(file);
                     KMLparser kmLparser = new KMLparser(os);
                     kmLparser.startWriting();
@@ -159,7 +166,6 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
 
                 case KML_FILE:
                     file = new File(new URI(data.toString()));//experimental and unsafe. need to add file checking.
-
             }
 
             KmlLayer layer = new KmlLayer(mMap, new FileInputStream(file), this);
@@ -188,7 +194,6 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
             String type = resolver.getType(data); // MIME type sent by WhatsApp
 
             String filePath = data.getPath();
-
 
             if(filePath.endsWith(".gpx") || filePath.endsWith(".kml")) {
                 if(filePath.endsWith(".gpx"))
@@ -234,5 +239,19 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         fileSetUp(data);
+
+        if(closeUpPoint!= null)
+        {
+            int firstIndex = closeUpPoint.indexOf(',');
+            int lastIndex = closeUpPoint.lastIndexOf(',');
+
+
+            double lon = Double.valueOf(closeUpPoint.substring(0, firstIndex));
+            double lat = Double.valueOf(closeUpPoint.substring(firstIndex + 1, lastIndex));
+
+            LatLng latLng = new LatLng(lat, lon);
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0F));
+        }
     }
 }
