@@ -1,6 +1,7 @@
 package com.example.dronecontrol;
 
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.provider.OpenableColumns;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -171,15 +173,27 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
             KmlLayer layer = new KmlLayer(mMap, new FileInputStream(file), this);
             layer.addLayerToMap();
 
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        } catch (XmlPullParserException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+        } catch (XmlPullParserException | IOException | URISyntaxException ex) {
+            showErrorDialog();
+            ex.printStackTrace();
         }
+    }
+
+    private void showErrorDialog()
+    {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setCancelable(false);
+        adb.setTitle("Error");
+        adb.setMessage("Something went wrong. please check your file and try again.");
+        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        AlertDialog errorAlert = adb.create();
+        errorAlert.show();
     }
 
     /**
@@ -188,45 +202,24 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
      * @return An integer representing the file type: {@link #NOT_FILE}, {@link #GPX_FILE}, or {@link #KML_FILE}.
      * @throws FileNotFoundException If the file specified by the URI is not found.
      */
-    int checkFile() throws FileNotFoundException {
+    private int checkFile() throws FileNotFoundException {
         if (data != null) {
-            ContentResolver resolver = getContentResolver();
-            String type = resolver.getType(data); // MIME type sent by WhatsApp
 
             String filePath = data.getPath();
 
-            if(filePath.endsWith(".gpx") || filePath.endsWith(".kml")) {
-                if(filePath.endsWith(".gpx"))
-                {
-                    return GPX_FILE;
-                }
-                else
-                {
-                    return KML_FILE;
-                }
-            }
-            else {
+            if(filePath.endsWith(".kml")) {return KML_FILE;}
+            else if(filePath.endsWith(".gpx")) {return GPX_FILE;}
+            else
+            {
                 // Try inspecting file name (if possible)
-                Cursor cursor = resolver.query(data, null, null, null, null);
+                Cursor cursor = getContentResolver().query(data, null, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
                     int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     if (nameIndex != -1) {
                         String name = cursor.getString(nameIndex);
-                        if (name.endsWith(".gpx") || name.endsWith(".kml")) {
-                            if(name.endsWith(".gpx"))
-                            {
-                                return GPX_FILE;
-                            }
-                            else
-                            {
-                                return KML_FILE;
-                            }
-                            // parse GPX here
-                        }
-                        else
-                        {
-                            return NOT_FILE;
-                        }
+                        if (name.endsWith(".gpx")) {return GPX_FILE;}
+                        else if(name.endsWith(".kml")) {return KML_FILE;}
+                        else {return NOT_FILE;}
                     }
                     cursor.close();
                 }
