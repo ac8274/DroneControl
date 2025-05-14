@@ -42,6 +42,8 @@ public class GPXparser {
         this.serializer.endTag(null,"author");
         this.serializer.endTag(null,"metadata");
         //Second part finished, This part is of the Author writes.
+
+        this.serializer.flush();
     }
 
     public void addPoint(double latatiude, double longtatiude, double elevation,String name) throws IOException {
@@ -55,10 +57,14 @@ public class GPXparser {
         this.serializer.startTag(null,"name").text(name).endTag(null,"name");
         this.serializer.startTag(null,"sym").text("Flag").endTag(null,"sym");
         this.serializer.endTag(null,"wpt");
+
+        this.serializer.flush();
     }
 
     public void endWriting() throws IOException {
         this.serializer.endTag(null,"gpx");
         this.serializer.endDocument();
+
+        this.serializer.flush();
     }
 }

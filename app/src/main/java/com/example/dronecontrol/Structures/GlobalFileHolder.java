@@ -20,38 +20,40 @@ public class GlobalFileHolder {
         this.os = null;
     }
 
-    public void setFile(File file) throws FileNotFoundException, StreamInUseException
+    public void setFile(File file) throws IOException, StreamInUseException
     {
         if(this.os == null) {
             this.os = new FileOutputStream(file);
             this.gpXparser = new GPXparser(this.os);
+            this.gpXparser.startWriting();
         }
         else {
             throw new StreamInUseException("Stream currently in use");
         }
     }
-    public void startWriting() throws IOException {
-        this.gpXparser.startWriting();
-        this.os.flush();
-    }
+//    public void startWriting() throws IOException {
+//        this.gpXparser.startWriting();
+//        // this.os.flush();
+//    }
 
     public void writeToFile(double latitude, double longitude, double elevation) {
         try {
             this.gpXparser.addPoint(latitude,longitude,elevation,"trackPoint");
-            this.os.flush();
+            // this.os.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void endFileWriting() throws IOException {
-        this.gpXparser.endWriting();
-        this.os.flush();
-    }
+//    public void endFileWriting() throws IOException {
+//        this.gpXparser.endWriting();
+//        // this.os.flush();
+//    }
 
     public void closeStream() throws IOException {
         if(!stopWriting)
         {
+            this.gpXparser.endWriting();
             this.os.close();
             this.os = null;
         }

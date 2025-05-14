@@ -59,6 +59,12 @@ public class Selection_Screen extends AppCompatActivity {
         adb.setTitle("Requirements");
         adb.setMessage("Please Turn on HotSpot Before Continuing!");
         adb.setPositiveButton("OK",null);  // override the defualt behaviour of the positive button that it will not exist.
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
         AlertDialog wifiHotspotAlert = adb.create();
         wifiHotspotAlert.show();
@@ -93,6 +99,12 @@ public class Selection_Screen extends AppCompatActivity {
         fileNameET.setHint("Type File Name HERE!");
         adb.setView(fileNameET);
         adb.setPositiveButton("Save",null);
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
         AlertDialog fileNameAD = adb.create();
         fileNameAD.show();
@@ -114,6 +126,6 @@ public class Selection_Screen extends AppCompatActivity {
     }
 
     public void Go_To_DroneTracks_Selection(View view) {
-
+        startNextActivity(Track_selection.class,"");
     }
 }

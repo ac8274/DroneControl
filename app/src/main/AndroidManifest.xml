@@ -21,13 +21,43 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DroneControl"
         tools:targetApi="31">
+
+        <provider
+            android:name=".GpxProvider"
+            android:authorities="com.example.dronecontrol.gpxprovider"
+            android:enabled="true"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".TrackViewer"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content"
+                    tools:ignore="AppLinkUrlError" />
+                <data android:mimeType="application/gpx+xml" />
+                <data android:mimeType="application/vnd.google-earth.kml+xml" />
+                <data android:mimeType="application/octet-stream" /> <!-- Some KML apps use this -->
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Track_selection"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDC8q3A7ZD75Ck9pi7i3ANm8bRCYv4BOhU" />
 
         <activity
             android:name=".Drone_Control"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".Selection_Screen"
             android:exported="false" />
@@ -37,6 +67,7 @@
             android:theme="@style/Theme.DroneControl">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

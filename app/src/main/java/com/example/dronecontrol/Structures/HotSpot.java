@@ -55,11 +55,11 @@ public class HotSpot extends Thread{
 
             // Listen for incoming connections
             Socket clientSocket = serverSocket.accept();
-            Log.println(Log.DEBUG,"Connection", "connected");
+            //Log.println(Log.DEBUG,"Connection", "connected");
             serverSocket.close(); // the client was accepted no more need for socket
             //System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
             handleClient(clientSocket);
-            Log.println(Log.DEBUG,"Client","Finished handling client");
+            //Log.println(Log.DEBUG,"Client","Finished handling client");
             clientSocket.close();
             GlobalFileHolder.stopWriting = false;
 
@@ -79,7 +79,7 @@ public class HotSpot extends Thread{
         try {
             inputStream = clientSocket.getInputStream();
             outputStream = new DataOutputStream(clientSocket.getOutputStream());
-            this.fileHolder.startWriting();
+            //this.fileHolder.startWriting();
             while(!fileHolder.stopWriting) {
                 // Log.println(Log.DEBUG,"File Holder", "state: " + String.valueOf(fileHolder.stopWriting));
                 byte[] buffer = new byte[4096];
@@ -91,7 +91,7 @@ public class HotSpot extends Thread{
                     writeToClient(outputStream);
                 }
             }
-            fileHolder.endFileWriting();
+            //fileHolder.endFileWriting();
         } catch (IOException e) {
             Log.println(Log.INFO,"Reader","Reader failed to read from buffer");
             throw new RuntimeException(e);
