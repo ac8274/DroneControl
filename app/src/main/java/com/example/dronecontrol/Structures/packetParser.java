@@ -3,7 +3,7 @@ package com.example.dronecontrol.Structures;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class packetParser {
+public final class packetParser {
     public static double getElevation(byte[]message)
     {
         return extractDouble(message,16);

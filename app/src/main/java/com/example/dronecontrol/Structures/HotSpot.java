@@ -9,12 +9,8 @@ import com.example.dronecontrol.Drone_Control;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 public class HotSpot extends Thread{
     private ServerSocket serverSocket;
@@ -73,7 +69,7 @@ public class HotSpot extends Thread{
     }
 
     private void handleClient(Socket clientSocket) {
-        // Log.println(Log.INFO,"Connection","Succefully connected");
+        // Log.println(Log.INFO,"Connection","Successfully connected");
         DataOutputStream outputStream = null;
         InputStream inputStream = null;
         try {
