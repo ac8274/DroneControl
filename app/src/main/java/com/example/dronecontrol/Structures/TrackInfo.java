@@ -8,7 +8,7 @@ public class TrackInfo {
     private String flight_start_time;
     private String flight_end_time;
 
-    public TrackInfo(String name, String date, String start, String end, String uri)
+    public TrackInfo(String name, String date, String start, String end)
     {
         this.track_name = name;
         this.flight_date = date;
