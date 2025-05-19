@@ -94,7 +94,7 @@ public class Track_selection extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         File file = new File(this.getExternalFilesDir(null),tracksList.get(position).getTrackName() +".gpx");
-        FireBaseHelper.downloadFile(file, tracksList.get(position).getTrackFileUri(),
+        FireBaseHelper.downloadFile(file, "userFiles/"+UserUid.user_uid+"/.gpxFiles/"+tracksList.get(position).getTrackName()+".gpx",
                 new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {

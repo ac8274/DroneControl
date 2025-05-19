@@ -78,7 +78,6 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
     private void setTrackInfo()
     {
         this.trackInfo = new TrackInfo(this.fileName);
-        this.trackInfo.setTrackFileUri("userFiles/"+UserUid.user_uid+"/.gpxFiles/"+this.fileName+".gpx");
         this.trackInfo.setFlightDate(new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime()));
         this.trackInfo.setFlightStartTime(new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()));
     }
