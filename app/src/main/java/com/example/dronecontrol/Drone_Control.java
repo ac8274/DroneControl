@@ -1,13 +1,12 @@
 package com.example.dronecontrol;
 
+import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dronecontrol.CustomExceptions.StreamInUseException;
@@ -43,7 +42,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
     private String fileName;
     private File file;
     private GlobalFileHolder fileHolder;
-    private AlertDialog firebaseUpload;
+    private ProgressDialog firebaseUpload;
     private static Marker droneMarker; // Marker for the drone
     private TrackInfo trackInfo;
 
@@ -128,13 +127,12 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
     public void createWritingAlert()
     {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setCancelable(false);
-        adb.setTitle("Requirements");
-        adb.setMessage("Saving Track ...");
+        firebaseUpload = new ProgressDialog(Drone_Control.this);
+        //AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        firebaseUpload.setCancelable(false);
+        firebaseUpload.setTitle("Saving Track");
         //adb.setPositiveButton("OK",null);  // override the defualt behaviour of the positive button that it will not exist.
 
-        firebaseUpload = adb.create();
         firebaseUpload.show();
 
         while(GlobalFileHolder.stopWriting!=false) {continue;}
@@ -151,9 +149,8 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
 
     public void FireBaseUploadDialog()
     {
-        firebaseUpload.setTitle("Requirements");
-        firebaseUpload.setMessage("Saving Track ...");
-        firebaseUpload.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view ->{});
+        firebaseUpload.setTitle("Uploading Track");
+        firebaseUpload.getButton(ProgressDialog.BUTTON_POSITIVE).setOnClickListener(view ->{});
         FireBaseHelper.uploadFile(this.file,UserUid.user_uid,".gpx",
                 new OnFailureListener() {
             @Override
@@ -171,7 +168,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
                 finish();
             }
         });
-        firebaseUpload.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(null);
+        firebaseUpload.getButton(ProgressDialog.BUTTON_POSITIVE).setOnClickListener(null);
     }
 
 
