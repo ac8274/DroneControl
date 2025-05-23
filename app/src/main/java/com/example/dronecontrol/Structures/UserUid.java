@@ -1,5 +1,5 @@
 package com.example.dronecontrol.Structures;
 
-public class UserUid {
+public final class UserUid {
     public static String user_uid;
 }

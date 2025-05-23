@@ -70,42 +70,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Sign_In(View view) {
-        auth.signInWithEmailAndPassword(emailInputEditText.getText().toString() , editTextPassword.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            onSuccess();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            task.getException().printStackTrace();
-                            AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
-                            adb.setTitle("Failed to SignIn");
-                            adb.setMessage("Your email or password are wrong. please recheck them and retry again later.");
-                            AlertDialog failureAlert = adb.create();
-                            failureAlert.show();
+        if(emailInputEditText.getText().toString().isEmpty() || editTextPassword.getText().toString().isEmpty())
+        {
+            AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+            adb.setTitle("Failed to SignIn");
+            adb.setMessage("Please Input the email and password");
+            AlertDialog failureAlert = adb.create();
+            failureAlert.show();
+        }
+        else {
+            auth.signInWithEmailAndPassword(emailInputEditText.getText().toString(), editTextPassword.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                onSuccess();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                task.getException().printStackTrace();
+                                AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+                                adb.setTitle("Failed to SignIn");
+                                adb.setMessage("Your email or password are wrong. please recheck them and retry again later.");
+                                AlertDialog failureAlert = adb.create();
+                                failureAlert.show();
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     public void Sign_Up(View view) {
-        auth.createUserWithEmailAndPassword(emailInputEditText.getText().toString(), editTextPassword.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            onSuccess();
-                        } else {
-                            task.getException().printStackTrace();
-                            AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
-                            adb.setTitle("Failed to SignUp");
-                            adb.setMessage("your email or password do not match the requirements. please recheck them and retry after");
-                            AlertDialog failureAlert = adb.create();
-                            failureAlert.show();
+        if(emailInputEditText.getText().toString().isEmpty() || editTextPassword.getText().toString().isEmpty())
+        {
+            AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+            adb.setTitle("Failed to Sign Up");
+            adb.setMessage("If you wish to Sign Up please Input the email and password");
+            AlertDialog failureAlert = adb.create();
+            failureAlert.show();
+        }
+        else if (editTextPassword.getText().toString().length() <= 4)
+        {
+            AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+            adb.setTitle("Password too short");
+            adb.setMessage("If you wish to Sign Up please input a password longer than 4 characters");
+            AlertDialog failureAlert = adb.create();
+            failureAlert.show();
+        }
+        else
+        {
+            auth.createUserWithEmailAndPassword(emailInputEditText.getText().toString(), editTextPassword.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                onSuccess();
+                            } else {
+                                task.getException().printStackTrace();
+                                AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+                                adb.setTitle("Failed to SignUp");
+                                adb.setMessage("your email or password do not match the requirements. please recheck them and retry after");
+                                AlertDialog failureAlert = adb.create();
+                                failureAlert.show();
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     public void onSuccess()
