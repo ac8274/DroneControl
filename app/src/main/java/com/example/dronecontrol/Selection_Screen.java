@@ -57,7 +57,7 @@ public class Selection_Screen extends AppCompatActivity {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setCancelable(false);
         adb.setTitle("Requirements");
-        adb.setMessage("Please Turn on HotSpot Before Continuing!");
+        adb.setMessage("Please turn on 'Hotspot' before continuing!");
         adb.setPositiveButton("OK",null);  // override the defualt behaviour of the positive button that it will not exist.
         adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override

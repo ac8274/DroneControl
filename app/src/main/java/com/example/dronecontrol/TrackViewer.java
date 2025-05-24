@@ -105,9 +105,9 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
 
                     boolean firstPoint = true;
 
-                    String startPoint = "";
+                    String startPoint = ""; //default value
 
-                    String LastPoint = "";
+                    String LastPoint = ""; //default value
 
                     String cords = "";
 
@@ -152,6 +152,13 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
 
                         parser.next(); // move forward in the xml file
                         eventType = parser.getEventType();//get the event which it is
+                    }
+
+                    if(startPoint.equals("")) // if the drone didn't connect then add default values
+                    {
+                        startPoint = "34,35,300\n";
+                        cords = "34,35,300\n";
+                        LastPoint = "34,35,300\n";
                     }
 
                     int firstIndex = startPoint.indexOf(',');

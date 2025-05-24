@@ -64,6 +64,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
         file = new File(this.getExternalFilesDir(null),fileName +".gpx");
         try {
             fileHolder = GlobalFileHolder.getInstance();
+            fileHolder.stopWriting = false;
             fileHolder.setFile(this.file);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

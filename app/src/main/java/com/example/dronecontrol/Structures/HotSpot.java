@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class HotSpot extends Thread{
     private ServerSocket serverSocket;
@@ -46,19 +47,31 @@ public class HotSpot extends Thread{
         try {
             // Bind to the Hotspot IP and a specific port
             serverSocket = new ServerSocket(PORT);
-
+            serverSocket.setSoTimeout(500); // Timeout after 500 milliseconds
             System.out.println("Server started" + ":" + PORT);
-
-            // Listen for incoming connections
-            Socket clientSocket = serverSocket.accept();
-            //Log.println(Log.DEBUG,"Connection", "connected");
-            serverSocket.close(); // the client was accepted no more need for socket
-            //System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
-            handleClient(clientSocket);
-            //Log.println(Log.DEBUG,"Client","Finished handling client");
-            clientSocket.close();
-            GlobalFileHolder.stopWriting = false;
-
+            while (!fileHolder.stopWriting)
+            {
+                try {
+                    // Listen for incoming connections
+                    Socket clientSocket = serverSocket.accept();
+                    //Log.println(Log.DEBUG,"Connection", "connected");
+                    serverSocket.close(); // the client was accepted no more need for socket
+                    //System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
+                    handleClient(clientSocket);
+                    //Log.println(Log.DEBUG,"Client","Finished handling client");
+                    clientSocket.close();
+                    GlobalFileHolder.stopWriting = false;
+                    break;
+                }
+                catch (SocketTimeoutException e)
+                {
+                    continue;
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            Log.println(Log.INFO,"socket place","closed");
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("ServerThread", "Exception in ServerThread: " + e.getMessage());
@@ -128,7 +141,7 @@ public class HotSpot extends Thread{
         try {
             if (serverSocket != null && !serverSocket.isClosed()) {
                 serverSocket.close();
-
+                fileHolder.stopWriting = false;
             }
         } catch (IOException e) {
             e.printStackTrace();
