@@ -43,7 +43,8 @@ public class Joystick extends View {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
-    public Joystick(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public Joystick(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
     }
@@ -110,9 +111,9 @@ public class Joystick extends View {
         String Absolute_point = "(" + containment_width/2 + ", " + containment_height/2 + ")";
         Log.println(Log.DEBUG, "Current Circle Point",circle_point);
         Log.println(Log.DEBUG, "Absolute Circle Point",Absolute_point);
-        double angle = Math.atan((-1*this.getYDistance())/this.getXDistance());
+        double angle = Math.atan((-1*this.getYDistance())/this.getXDistance()); // angle in radians
         // Log.println(Log.DEBUG, "joystick degree",String.valueOf(angle));
-        angle *= (180.0/Math.PI);
+        angle *= (180.0/Math.PI); // convert to degrees
         if(0 > this.getXDistance())
         {
             angle += 180;
