@@ -109,7 +109,6 @@ public class KMLparser {
         this.serializer.flush(); // wright all of the above into the file.
     }
 
-
     public void writeCloseUpPoint(String lon, String lan) throws IOException {
         this.serializer.startTag(null,"LookAt");
         this.serializer.startTag(null,"longitude")
