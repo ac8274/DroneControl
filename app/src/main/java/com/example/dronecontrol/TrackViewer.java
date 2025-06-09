@@ -49,10 +49,6 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
      */
     private static GoogleMap mMap;
     /**
-     * The {@link Intent} that started this activity.
-     */
-    private Intent gi;
-    /**
      * The {@link Uri} of the data (GPX or KML file) to be displayed.
      */
     private Uri data;
@@ -82,7 +78,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
             mapFragment.getMapAsync(this);
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        gi = getIntent();
+        Intent gi = getIntent();
         data = gi.getData();
         closeUpPoint = null;
     }
