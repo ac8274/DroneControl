@@ -34,7 +34,6 @@ public class Track_selection extends AppCompatActivity implements AdapterView.On
     ArrayList<TrackInfo> tracksList;
     trackAdapter tracksAdapter;
     ListView tracksListView;
-    Intent gi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,7 @@ public class Track_selection extends AppCompatActivity implements AdapterView.On
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // locks the screen in the horizontol state.
 
-        gi = getIntent();
+        Intent gi = getIntent();
     }
 
     @Override
