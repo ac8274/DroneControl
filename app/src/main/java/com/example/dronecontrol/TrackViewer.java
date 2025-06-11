@@ -92,12 +92,9 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
     private void fileSetUp(Uri data) {
         try {
             File file = null;
-            switch (checkFile()) {
-                case NOT_FILE:
-                    finish();
-                    break;
-                case GPX_FILE:
-                    file = new File(this.getExternalFilesDir(null), "DroneRoute.kml");
+            if(checkFile() == GPX_FILE)
+            {
+                file = new File(this.getExternalFilesDir(null), "DroneRoute.kml");
 
                     boolean firstPoint = true;
 
@@ -167,18 +164,18 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                     kmLparser.startWriting();
                     kmLparser.writeCloseUpPoint(startPoint.substring(0, firstIndex), startPoint.substring(firstIndex + 1, lastIndex));
                     kmLparser.writeRoute(startPoint, LastPoint, cords, data.toString().substring(data.toString().lastIndexOf('/') + 1));
-                    break;
 
-                case KML_FILE:
-                    file = new File(new URI(data.toString()));//experimental and unsafe. need to add file checking.
+                    KmlLayer layer = new KmlLayer(mMap, new FileInputStream(file), this);
+                    layer.addLayerToMap();
+            }
+            else
+            {
+                showErrorDialog();
             }
 
-            KmlLayer layer = new KmlLayer(mMap, new FileInputStream(file), this);
-            layer.addLayerToMap();
-
-        } catch (XmlPullParserException | IOException | URISyntaxException ex) {
-            showErrorDialog();
+        } catch (XmlPullParserException | IOException ex) {
             ex.printStackTrace();
+            showErrorDialog();
         }
     }
 
@@ -210,8 +207,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
 
             String filePath = data.getPath();
 
-            if(filePath.endsWith(".kml")) {return KML_FILE;}
-            else if(filePath.endsWith(".gpx")) {return GPX_FILE;}
+            if(filePath.endsWith(".gpx")) {return GPX_FILE;}
             else
             {
                 // Try inspecting file name (if possible)
