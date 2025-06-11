@@ -56,10 +56,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
      * Constant indicating that the file type is a GPX file.
      */
     private static final int GPX_FILE = 1;
-    /**
-     * Constant indicating that the file type is a KML file.
-     */
-    private static final int KML_FILE = 2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
