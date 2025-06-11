@@ -1,6 +1,5 @@
 package com.example.dronecontrol;
 
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,13 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.dronecontrol.Structures.KMLparser;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,8 +30,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
@@ -217,7 +210,6 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
                     if (nameIndex != -1) {
                         String name = cursor.getString(nameIndex);
                         if (name.endsWith(".gpx")) {return GPX_FILE;}
-                        else if(name.endsWith(".kml")) {return KML_FILE;}
                         else {return NOT_FILE;}
                     }
                     cursor.close();

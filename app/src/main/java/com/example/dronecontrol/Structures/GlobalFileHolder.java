@@ -3,10 +3,9 @@ package com.example.dronecontrol.Structures;
 import com.example.dronecontrol.CustomExceptions.StreamInUseException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+
 
 public class GlobalFileHolder {
     public static boolean stopWriting;

@@ -17,7 +17,9 @@ public final class FireBaseHelper {
     private FireBaseHelper()
     {
     }
-    public static void downloadFile(File file,String filePath, OnSuccessListener successListener,OnFailureListener failureListener)
+    public static void downloadFile(File file,String filePath,
+                                    OnSuccessListener successListener,
+                                    OnFailureListener failureListener)
     {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference ref = storage.getReference().child(filePath);

@@ -6,7 +6,7 @@ import org.xmlpull.v1.XmlSerializer;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+
 
 public class KMLparser {
     private XmlSerializer serializer;

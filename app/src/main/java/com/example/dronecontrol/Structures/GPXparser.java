@@ -1,6 +1,5 @@
 package com.example.dronecontrol.Structures;
 
-import android.location.Location;
 import android.os.Build;
 import android.util.Xml;
 

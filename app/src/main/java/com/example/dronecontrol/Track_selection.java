@@ -30,10 +30,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Track_selection extends AppCompatActivity implements AdapterView.OnItemClickListener {
-    TextView Title;
-    ArrayList<TrackInfo> tracksList;
-    trackAdapter tracksAdapter;
-    ListView tracksListView;
+    private TextView Title;
+    private ArrayList<TrackInfo> tracksList;
+    private trackAdapter tracksAdapter;
+    private ListView tracksListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
