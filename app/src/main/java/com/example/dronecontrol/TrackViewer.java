@@ -189,7 +189,7 @@ public class TrackViewer extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Checks the type of the input file (GPX or KML) based on its content and file extension.
      *
-     * @return An integer representing the file type: {@link #NOT_FILE}, {@link #GPX_FILE}, or {@link #KML_FILE}.
+     * @return An integer representing the file type: {@link #NOT_FILE}, {@link #GPX_FILE}
      * @throws FileNotFoundException If the file specified by the URI is not found.
      */
     private int checkFile() throws FileNotFoundException {
