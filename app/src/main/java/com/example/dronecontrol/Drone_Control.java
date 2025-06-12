@@ -159,6 +159,7 @@ public class Drone_Control extends AppCompatActivity implements OnMapReadyCallba
                 firebaseUpload.dismiss();
                 Log.println(Log.INFO,"dataUploadFailure",exception.getMessage());
                 Toast.makeText(Drone_Control.this, "failure" ,Toast.LENGTH_SHORT).show();
+                finish();
             }
         }, new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
